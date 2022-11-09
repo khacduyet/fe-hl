@@ -1,0 +1,98 @@
+html {
+  padding: 15px;
+  font-size: 15px;
+}
+.container-haha {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-radius: 5px;
+  padding: 15px;
+}
+.tabview-demo .p-tabview p {
+  padding: 0 !important;
+  margin: 0;
+}
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  padding: 0.6rem 0.875rem !important;
+  font-size: 0.875rem !important;
+  line-height: 1.25rem;
+}
+.p-tabview.no-content .p-tabview-panels {
+  padding: 0 !important;
+}
+.p-calendar-w-btn-right .p-datepicker-trigger {
+  font-size: 0.875rem !important;
+  padding: 0.4375rem 0.65625rem !important;
+}
+.text-center {
+  text-align: center;
+  align-items: center;
+}
+
+.p-datatable .p-column-header-content {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+table > thead > tr > th {
+  text-align: center;
+  vertical-align: middle;
+}
+table td{
+  vertical-align: middle;
+}
+.p-inputnumber input {
+  text-align: right;
+  width: 100%;
+}
+.p-calendar {
+  width: 100%;
+}
+.p-calendar input {
+  width: 100%;
+}
+.tc-w-80 {
+  width: 80px !important;
+  max-width: 80px !important;
+  min-width: 80px !important;
+}
+.tc-w-120 {
+  width: 120px !important;
+  max-width: 120px !important;
+  min-width: 120px !important;
+}
+.tc-w-150 {
+  width: 150px !important;
+  max-width: 150px !important;
+  min-width: 150px !important;
+}
+.p-multiselect {
+  width: 100%;
+}
+.p-multiselect .p-multiselect-label {
+  font-size: 0.875rem;
+  padding: 0.4375rem 0.65625rem;
+}
+.ui-datepicker{
+  overflow: none;
+  z-index: 999;
+}
+.p-selectbutton .p-button {
+  background: #4c22af !important;
+  border: 1px solid #206caf !important;
+  color: #ffffff;
+  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
+}
+.p-selectbutton .p-button {
+  background: #4c22af !important;
+  border: 1px solid #206caf !important;
+  color: #ffffff;
+  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
+}
+.p-selectbutton .p-button.p-highlight {
+  background: #206caf !important;
+  border-color: #206caf !important;
+  color: #ffffff;
+}

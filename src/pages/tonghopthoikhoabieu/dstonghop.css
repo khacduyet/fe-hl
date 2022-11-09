@@ -1,0 +1,83 @@
+.table-tong-hop {
+  --bs-table-border-color: #000;
+  /* display: block;
+  overflow-x: auto;
+  white-space: nowrap; */
+}
+.topPos {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+}
+
+.botPos {
+  position: absolute;
+  bottom: 10%;
+  left: 10%;
+}
+
+.crossed {
+  width: 200px;
+  position: relative;
+  background-image: linear-gradient(
+    to bottom left,
+    transparent calc(50% - 1px),
+    #000,
+    transparent calc(50% + 1px)
+  );
+}
+
+.table-tong-hop .body-danh-sach tr td {
+  height: 150px;
+}
+
+.table-tong-hop thead tr {
+  height: 100px;
+}
+
+.table-tong-hop thead td {
+  height: 100px;
+}
+.col-thu {
+  width: 100px;
+  min-width: 100px;
+  max-width: 140px;
+}
+.col-ca {
+  width: 150px;
+  min-width: 150px;
+  max-width: 200px;
+}
+.col-items {
+  width: 100%;
+  min-width: 300px;
+}
+
+.Container{
+  overflow: auto;
+  border-radius: 5px;
+  margin: 0 auto;
+  /* max-height: 700px; */
+}
+
+/* Designing for scroll-bar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: gainsboro;
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
