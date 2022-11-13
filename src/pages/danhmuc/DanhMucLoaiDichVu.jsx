@@ -166,7 +166,7 @@ export default function DanhMucLoaiDichVu() {
             header="Đơn giá"
           ></Column>
           <Column
-            style={{ width: '35%' }}
+            style={{ width: '25%' }}
             field="GhiChu"
             headerClassName="text-center"
             header="Ghi chú"
