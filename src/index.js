@@ -4,14 +4,12 @@ import "./index.css";
 import App from "./App";
 import { HashRouter, Routes, Route } from "react-router-dom";
 
-import DSKhaiBaoGioGiang from "./pages/khaibaogiogiang/DSKhaiBaoGioGiang";
-import CTKhaiBaoGioGiang from "./pages/khaibaogiogiang/CTKhaiBaoGioGiang";
-
 import DanhMucChungCu from "./pages/danhmuc/DanhMucChungCu";
 import DanhMucPhuongTien from "./pages/danhmuc/DanhMucPhuongTien";
 import DanhMucLoaiDongPhi from "./pages/danhmuc/DanhMucLoaiDongPhi";
 import DanhMucLoaiDichVu from "./pages/danhmuc/DanhMucLoaiDichVu";
 import DanhMucLoaiXe from "./pages/danhmuc/DanhMucLoaiXe";
+import QuanLyDanCu from "./pages/quanlydancu";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -25,9 +23,10 @@ root.render(
 
         <Route path="/danhmuc/loaidichvu" element={<DanhMucLoaiDichVu />} />
         <Route path="/danhmuc/loaixe" element={<DanhMucLoaiXe />} />
+        <Route path="/danhmuc/canho" element={<QuanLyDanCu />} />
 
-        <Route path="/quytrinh/khaibaogiogiang" element={<DSKhaiBaoGioGiang />} />
-        <Route path="/quytrinh/khaibaogiogiang/:opt/:id" element={<CTKhaiBaoGioGiang />} />
+        {/* <Route path="/quytrinh/khaibaogiogiang" element={<DSKhaiBaoGioGiang />} />
+        <Route path="/quytrinh/khaibaogiogiang/:opt/:id" element={<CTKhaiBaoGioGiang />} /> */}
       </Route>
     </Routes>
   </HashRouter>
