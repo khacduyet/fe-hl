@@ -9,16 +9,77 @@ import { Outlet } from "react-router-dom";
 import { addLocale } from "primereact/api";
 import { ToastContainer, toast } from "react-toastify";
 import { vnCalendar } from "./services/const";
+import { createContext, useContext, useEffect, useState } from "react";
+import { Menubar } from 'primereact/menubar';
+import { Dropdown } from "primereact/dropdown";
+import { cChungCu } from "./pages/common/apiservice";
+import { useCookies } from 'react-cookie'
+
+export const outContext = createContext();
 function App() {
+  const [cookies, setCookie] = useCookies(['access_chungcu'])
+  const [chungCu, setChungCu] = useState([]);
+
   addLocale("vn", vnCalendar);
   const isLocal = () => {
     return window.location.origin.includes('localhost')
   }
+
+  const getOptions = async () => {
+    let $chungcu = await cChungCu();
+    if ($chungcu) {
+      setChungCu($chungcu);
+      changeCC($chungcu[0].Id)
+    }
+  }
+
+  const changeCC = (e) => {
+    if (e === undefined) {
+      let expires = new Date()
+      expires.setTime(expires.getTime() + (300000 * 1000))
+      setCookie('access_chungcu', null, { path: '/', expires })
+    } else {
+      let expires = new Date()
+      expires.setTime(expires.getTime() + (300000 * 1000))
+      setCookie('access_chungcu', e, { path: '/', expires })
+    }
+  }
+
+  useEffect(() => {
+    getOptions();
+  }, [])
   return (
     <>
       <div>
         {isLocal() && <Layout />}
-        <Outlet context={{ toast }} />
+        <nav className="nav-bar d-flex justify-content-between align-items-center bg-white border-bottom shadow-sm">
+          <div className="d-flex justify-content-between align-items-center">
+            <button>ABC</button>
+          </div>
+          <div className="d-flex justify-content-center align-items-center">
+            <div className="d-flex justify-content-between align-items-center">
+              <div className="">
+                <Dropdown
+                  className="w-full"
+                  value={cookies['access_chungcu']}
+                  options={chungCu?.map((x) => {
+                    return { label: x.Ten, value: x.Id };
+                  })}
+                  onChange={(e) => {
+                    changeCC(e.target.value)
+                  }}
+                  style={{ minWidth: "200px" }}
+                  filter
+                  filterBy="label"
+                  placeholder="Chọn phương tiện"
+                />
+              </div>
+            </div>
+          </div>
+        </nav>
+        <outContext.Provider value={cookies}>
+          <Outlet context={{ toast }} />
+        </outContext.Provider>
       </div>
       <ToastContainer
         pauseOnFocusLoss={false}
@@ -42,6 +103,9 @@ function Layout() {
           <Link style={_stl_item} to="/danhmuc/loaidongphi">Loại đóng phí</Link>
           <Link style={_stl_item} to="/danhmuc/loaidichvu">Loại dịch vụ</Link>
           <Link style={_stl_item} to="/danhmuc/loaixe">Loại xe</Link>
+          <Link style={_stl_item} to="/danhmuc/canho">Căn hộ</Link>
+          <Link style={_stl_item} to="/danhmuc/xengoai">Xe ngoài</Link>
+          <Link style={_stl_item} to="/quanlydongphi">Quản lý đóng phí</Link>
           {/* <Link style={_stl_item} to="/quytrinh/khaibaogiogiang">Khai báo giờ giảng</Link> */}
         </nav>
       </div>

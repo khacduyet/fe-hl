@@ -10,6 +10,8 @@ import DanhMucLoaiDongPhi from "./pages/danhmuc/DanhMucLoaiDongPhi";
 import DanhMucLoaiDichVu from "./pages/danhmuc/DanhMucLoaiDichVu";
 import DanhMucLoaiXe from "./pages/danhmuc/DanhMucLoaiXe";
 import QuanLyDanCu from "./pages/quanlydancu";
+import XeNgoai from "./pages/quanlydancu/XeNgoai";
+import QuanLyDongPhi from "./pages/quanlydongphi";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -24,6 +26,8 @@ root.render(
         <Route path="/danhmuc/loaidichvu" element={<DanhMucLoaiDichVu />} />
         <Route path="/danhmuc/loaixe" element={<DanhMucLoaiXe />} />
         <Route path="/danhmuc/canho" element={<QuanLyDanCu />} />
+        <Route path="/danhmuc/xengoai" element={<XeNgoai />} />
+        <Route path="/quanlydongphi" element={<QuanLyDongPhi />} />
 
         {/* <Route path="/quytrinh/khaibaogiogiang" element={<DSKhaiBaoGioGiang />} />
         <Route path="/quytrinh/khaibaogiogiang/:opt/:id" element={<CTKhaiBaoGioGiang />} /> */}

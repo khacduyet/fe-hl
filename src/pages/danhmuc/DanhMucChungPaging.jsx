@@ -43,7 +43,7 @@ export default function DanhMucChungPaging() {
     setVisible(true);
   };
   const confirmAdd = async () => {
-    if(validate()){
+    if (validate()) {
       let add = await DanhMucService[serviceOpt[opt]][
         item.Id === "" ? "Add" : "Update"
       ](item);
@@ -56,8 +56,8 @@ export default function DanhMucChungPaging() {
           toast.error(add.Detail);
         }
       }
-    }else{
-      toast.error('Vui lòng điền đầy đủ các trường thông tin bắt buộc!')
+    } else {
+      toast.error("Vui lòng điền đầy đủ các trường thông tin bắt buộc!");
     }
   };
   const handleEdit = (item) => {
@@ -70,8 +70,8 @@ export default function DanhMucChungPaging() {
       message: "Bạn chắc chắn muốn xóa chứ?",
       header: "Thông báo",
       icon: "pi pi-exclamation-triangle",
-      acceptLabel:"Chấp nhận",
-      rejectLabel:"Hủy",
+      acceptLabel: "Chấp nhận",
+      rejectLabel: "Hủy",
       accept: async () => {
         let $delete = await DanhMucService[serviceOpt[opt]].Delete(item);
         if ($delete) {
@@ -80,7 +80,7 @@ export default function DanhMucChungPaging() {
           } else {
             toast.error($delete.Detail);
           }
-          getListDanhMuc()
+          getListDanhMuc();
         }
       },
       reject: () => getListDanhMuc(),
@@ -126,36 +126,53 @@ export default function DanhMucChungPaging() {
           </div>
         </div>
         {/* <div>{JSON.stringify(listQuyTrinh)}</div> */}
-        <DataTable className="p-datatable-sm p-datatable-gridlines pt-5" value={listItem} paginatorLeft={'Tổng số bản ghi '+listItem?.length} paginatorClassName="justify-content-end" paginator first={0} rows={10} >
+        <DataTable
+          className="p-datatable-sm p-datatable-gridlines pt-5"
+          value={listItem}
+          paginatorLeft={"Tổng số bản ghi " + listItem?.length}
+          paginatorClassName="justify-content-end"
+          paginator
+          first={0}
+          rows={10}
+        >
           <Column
             bodyClassName="text-center"
             field="STT"
             headerClassName="text-center"
-            style={{ width: '5%' }}
+            style={{ width: "5%" }}
             header="#"
           ></Column>
-          <Column field="Ma" headerClassName="text-center" bodyClassName="text-center" header="Mã"></Column>
           <Column
-            style={{ width: '20%' }} 
+            field="Ma"
+            headerClassName="text-center"
+            bodyClassName="text-center"
+            header="Mã"
+          ></Column>
+          <Column
+            style={{ width: "20%" }}
             field="Ten"
             headerClassName="text-center"
             bodyClassName="text-center"
             header="Tên"
           ></Column>
           <Column
-            style={{ width: '35%' }} 
+            style={{ width: "35%" }}
             field="GhiChu"
             headerClassName="text-center"
             header="Ghi chú"
-            bodyStyle={{maxWidth: "0"}}
-            body={(rowData)=>{
-              return <div className="wrapper-small" title={rowData.GhiChu}>{rowData.GhiChu}</div>
+            bodyStyle={{ maxWidth: "0" }}
+            body={(rowData) => {
+              return (
+                <div className="wrapper-small" title={rowData.GhiChu}>
+                  {rowData.GhiChu}
+                </div>
+              );
             }}
           ></Column>
           <Column
             bodyClassName="text-center"
             field="GhiChu"
-            style={{ width: '10%' }}
+            style={{ width: "10%" }}
             body={(rowData) => (
               <>
                 <Button
@@ -235,4 +252,3 @@ export default function DanhMucChungPaging() {
     </>
   );
 }
-

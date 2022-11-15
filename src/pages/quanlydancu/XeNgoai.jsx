@@ -1,41 +1,58 @@
-import React, { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
 import { Button } from "primereact/button";
+import { Checkbox } from "primereact/checkbox";
+import { Column } from "primereact/column";
+import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
+import { DataTable } from "primereact/datatable";
+import { Dialog } from "primereact/dialog";
+import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
+import { useContext, useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import { outContext } from "../../App";
 import { DanhMucService } from "../../services/danhmuc.service";
-import { Dialog } from "primereact/dialog";
-import { ConfirmDialog } from "primereact/confirmdialog"; // To use <ConfirmDialog> tag
-import { confirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method
-import { Dropdown } from "primereact/dropdown";
-import { Checkbox } from "primereact/checkbox";
-import {
-  validForm,
-} from "../../services/helperfunction";
+import { validForm } from "../../services/helperfunction";
+import { cLoaiPhuongTien, cLoaiXe } from "../common/apiservice";
 
-export default function DanhMucLoaiXe() {
+export default function XeNgoai() {
   const { toast } = useOutletContext();
   const [listItem, setListItem] = useState([]);
-  const [filter, setFilter] = useState({});
+  const [phuongTiens, setPhuongTiens] = useState([]);
+  const [loaiXes, setLoaiXes] = useState([]);
+  const [filter, setFilter] = useState({
+    Keyword: "",
+    IdPhuongTien: "",
+    IdLoaiXe: "",
+    IdChungCu: "",
+  });
+  const context = useContext(outContext);
+  useEffect(() => {
+    setFil(context.access_chungcu, "IdChungCu");
+  }, [context.access_chungcu]);
+
   const [visible, setVisible] = useState(false);
   const [header, setHeader] = useState("");
   const [item, setItem] = useState({});
   useEffect(() => {
-    getAllOptions();
-  }, []);
-  useEffect(() => {
     getList();
+    getAllOptions();
   }, [filter]);
   const getAllOptions = async () => {
-    // let $CaHoc = await DanhMucService.CaHoc.GetList({});
-    // if ($CaHoc) {
-    //   setListCaHoc($CaHoc);
-    // }
+    let $cLoaiPhuongTien = cLoaiPhuongTien();
+    let $cLoaiXe = cLoaiXe();
+    let res = await Promise.all([$cLoaiPhuongTien, $cLoaiXe]);
+    if (res[0]) {
+      setPhuongTiens(res[0]);
+    }
+    if (res[1]) {
+      setLoaiXes(res[1]);
+    }
   };
   const getList = async () => {
-    let list = await DanhMucService.LoaiXe.GetList();
+    let _fil = {
+      ...filter,
+    };
+    let list = await DanhMucService.XeNgoai.GetListFilter(_fil);
     if (list) {
       list.Data.forEach((item, index) => {
         item.STT = index + 1;
@@ -49,13 +66,16 @@ export default function DanhMucLoaiXe() {
       Id: "",
       Ma: "",
       Ten: "",
+      BienKiemSoat: "",
+      SoDienThoai: "",
       GhiChu: "",
+      TrangThai: false,
     });
     setVisible(true);
   };
   const confirmAdd = async () => {
     if (validate()) {
-      let add = await DanhMucService.LoaiXe.Set(item);
+      let add = await DanhMucService.XeNgoai.Set(item);
       if (add) {
         if (add.StatusCode === 200) {
           toast.success(add.Message);
@@ -68,10 +88,13 @@ export default function DanhMucLoaiXe() {
       toast.error("Vui lòng nhập đầy đủ các trường thông tin bắt buộc!");
     }
   };
-  const handleEdit = (item) => {
+  const handleEdit = async (item) => {
+    // let edit = await DanhMucService.XeNgoai.Get(item.Id);
+    // if (edit) {
     setHeader("Cập nhật");
     setItem(item);
     setVisible(true);
+    // }
   };
   const handleDelete = (item) => {
     confirmDialog({
@@ -81,7 +104,7 @@ export default function DanhMucLoaiXe() {
       acceptLabel: "Chấp nhận",
       rejectLabel: "Hủy",
       accept: async () => {
-        let $delete = await DanhMucService.LoaiXe.Delete(item.Id);
+        let $delete = await DanhMucService.XeNgoai.Delete(item.Id);
         if ($delete) {
           if ($delete.statusCode === 200) {
             toast.success($delete.Message);
@@ -110,14 +133,34 @@ export default function DanhMucLoaiXe() {
       setItem({ ...item });
     }
   };
+  const setFil = (e, key) => {
+    if (e !== null && e !== undefined && e !== "null") {
+      setFilter((prev) => ({
+        ...prev,
+        [key]: e,
+      }));
+    } else {
+      setFilter((prev) => ({
+        ...prev,
+        [key]: null,
+      }));
+    }
+  };
   const validate = () => {
-    let validVar = ["Ma", "Ten", "DonGia"];
+    let validVar = [
+      "Ma",
+      "Ten",
+      "SoDienThoai",
+      "BienKiemSoat",
+      "IdPhuongTien",
+      "IdLoaiXe",
+    ];
     return validForm(validVar, item);
   };
 
   return (
     <>
-      <h1 className="section-heading">Danh mục loại xe</h1>
+      <h1 className="section-heading">Danh mục xe ngoài</h1>
       <div className="container-haha">
         <div className="flex flex-row justify-content-between">
           <div>
@@ -141,38 +184,63 @@ export default function DanhMucLoaiXe() {
             bodyClassName="text-center"
             field="STT"
             headerClassName="text-center"
-            style={{ width: '5%' }}
+            style={{ width: "2%" }}
             header="#"
           ></Column>
           <Column
-            style={{ width: '15%' }}
+            style={{ width: "5%" }}
             field="Ma"
             headerClassName="text-center"
             bodyClassName="text-center"
             header="Mã"
           ></Column>
           <Column
-            style={{ width: '20%' }}
+            style={{ width: "10%" }}
             field="Ten"
             headerClassName="text-center"
             bodyClassName="text-center"
             header="Tên"
           ></Column>
           <Column
-            style={{ width: '20%' }}
-            field="DonGia"
+            style={{ width: "10%" }}
+            field="BienKiemSoat"
             headerClassName="text-center"
             bodyClassName="text-center"
-            header="Đơn giá"
+            header="Biển kiểm soát"
           ></Column>
           <Column
-            style={{ width: '25%' }}
+            style={{ width: "10%" }}
+            field="SoDienThoai"
+            headerClassName="text-center"
+            bodyClassName="text-center"
+            header="SĐT"
+          ></Column>
+          <Column
+            style={{ width: "10%" }}
+            field="TenPhuongTien"
+            headerClassName="text-center"
+            bodyClassName="text-center"
+            header="Phương tiện"
+          ></Column>
+          <Column
+            style={{ width: "10%" }}
+            field="TenLoaiXe"
+            headerClassName="text-center"
+            bodyClassName="text-center"
+            header="Loại xe"
+          ></Column>
+          <Column
+            style={{ width: "5%" }}
             field="GhiChu"
             headerClassName="text-center"
             header="Ghi chú"
             bodyStyle={{ maxWidth: "0" }}
             body={(rowData) => {
-              return <div className="wrapper-small" title={rowData.GhiChu}>{rowData.GhiChu}</div>
+              return (
+                <div className="wrapper-small" title={rowData.GhiChu}>
+                  {rowData.GhiChu}
+                </div>
+              );
             }}
           ></Column>
           <Column
@@ -182,14 +250,17 @@ export default function DanhMucLoaiXe() {
             header="Hoạt động"
             body={(rowData) => {
               return (
-                <Checkbox disabled={true} checked={rowData.TrangThai}></Checkbox>
+                <Checkbox
+                  disabled={true}
+                  checked={rowData.TrangThai}
+                ></Checkbox>
               );
             }}
           ></Column>
           <Column
             bodyClassName="text-center"
-            field="GhiChu"
-            style={{ width: '10%' }}
+            field="Handle"
+            style={{ width: "10%" }}
             body={(rowData) => (
               <>
                 <Button
@@ -215,7 +286,7 @@ export default function DanhMucLoaiXe() {
           ></Column>
         </DataTable>
         <Dialog
-          header={`${header} loại dịch vụ`}
+          header={`${header} căn hộ`}
           visible={visible}
           onHide={onHide}
           breakpoints={{ "960px": "40vw", "640px": "100vw" }}
@@ -252,21 +323,66 @@ export default function DanhMucLoaiXe() {
             </div>
             <div className="field col-6">
               <label>
-                Đơn giá<span className="text-red-500">(*)</span>:
+                Biển kiểm soát<span className="text-red-500">(*)</span>:
               </label>
               <InputText
-                filterkey={/\(?[\d.]+\)?/}
                 className="w-full"
-                value={item.DonGia}
-                onChange={(e) => setForm(e.target.value, "DonGia")}
+                value={item.BienKiemSoat}
+                onChange={(e) => setForm(e.target.value, "BienKiemSoat")}
               />
             </div>
+            <div className="field col-6">
+              <label>
+                Số điện thoại<span className="text-red-500">(*)</span>:
+              </label>
+              <InputText
+                className="w-full"
+                value={item.SoDienThoai}
+                onChange={(e) => setForm(e.target.value, "SoDienThoai")}
+              />
+            </div>
+
+            <div className="field col-6">
+              <label>
+                Phương tiện<span className="text-red-500">(*)</span>:
+              </label>
+              <Dropdown
+                className="w-full"
+                value={item.IdPhuongTien}
+                options={phuongTiens?.map((x) => {
+                  return { label: x.Ten, value: x.Id };
+                })}
+                onChange={(e) => setForm(e.target.value, "IdPhuongTien")}
+                filter
+                showClear
+                filterBy="label"
+                placeholder="Chọn phương tiện"
+              />
+            </div>
+            <div className="field col-6">
+              <label>
+                Loại xe<span className="text-red-500">(*)</span>:
+              </label>
+              <Dropdown
+                className="w-full"
+                value={item.IdLoaiXe}
+                options={loaiXes?.map((x) => {
+                  return { label: x.Ten, value: x.Id };
+                })}
+                onChange={(e) => setForm(e.target.value, "IdLoaiXe")}
+                filter
+                showClear
+                filterBy="label"
+                placeholder="Chọn loại xe"
+              />
+            </div>
+
             <div className="field col-12">
               <label>Ghi chú:</label>
               <InputTextarea
-                className="w-full"
                 rows={2}
                 cols={30}
+                className="w-full"
                 value={item.GhiChu}
                 onChange={(e) => setForm(e.target.value, "GhiChu")}
               />
