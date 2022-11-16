@@ -21,7 +21,7 @@ root.render(
       <Route path="/" element={<App />}>
         <Route path="/danhmuc/chungcu" element={<DanhMucChungCu />} />
         <Route path="/danhmuc/phuongtien" element={<DanhMucPhuongTien />} />
-        <Route path="/danhmuc/loaidongphi" element={<DanhMucLoaiDongPhi />} />
+        {/* <Route path="/danhmuc/loaidongphi" element={<DanhMucLoaiDongPhi />} /> */}
 
         <Route path="/danhmuc/loaidichvu" element={<DanhMucLoaiDichVu />} />
         <Route path="/danhmuc/loaixe" element={<DanhMucLoaiXe />} />

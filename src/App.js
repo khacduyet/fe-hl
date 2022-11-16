@@ -100,7 +100,7 @@ function Layout() {
         <nav style={_stl}>
           <Link style={_stl_item} to="/danhmuc/chungcu">Chung cư</Link>
           <Link style={_stl_item} to="/danhmuc/phuongtien">Phương tiện</Link>
-          <Link style={_stl_item} to="/danhmuc/loaidongphi">Loại đóng phí</Link>
+          {/* <Link style={_stl_item} to="/danhmuc/loaidongphi">Loại đóng phí</Link> */}
           <Link style={_stl_item} to="/danhmuc/loaidichvu">Loại dịch vụ</Link>
           <Link style={_stl_item} to="/danhmuc/loaixe">Loại xe</Link>
           <Link style={_stl_item} to="/danhmuc/canho">Căn hộ</Link>
