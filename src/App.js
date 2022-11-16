@@ -71,7 +71,7 @@ function App() {
                   style={{ minWidth: "200px" }}
                   filter
                   filterBy="label"
-                  placeholder="Chọn phương tiện"
+                  placeholder="Chọn chung cư"
                 />
               </div>
             </div>

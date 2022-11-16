@@ -29,6 +29,9 @@ function ServiceGeneratorKBGG(opt) {
         },
         Delete: (id) => {
             return get(dm + 'Delete' + opt + "?Id=" + id)
+        },
+        TaoNhanhPhieu: (data) => {
+            return post(dm + 'CreatePhieu', data);
         }
     }
 }

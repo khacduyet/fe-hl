@@ -19,13 +19,13 @@ export default function QuanLyDanCu() {
     const [listItem, setListItem] = useState([]);
     const [phuongTiens, setPhuongTiens] = useState([]);
     const [loaiXes, setLoaiXes] = useState([]);
+    const context = useContext(outContext);
     const [filter, setFilter] = useState({
         Keyword: "",
         IdPhuongTien: "",
         IdLoaiXe: "",
-        IdChungCu: "",
+        IdChungCu: context.access_chungcu,
     });
-    const context = useContext(outContext);
     useEffect(() => {
         setFil(context.access_chungcu, "IdChungCu");
     }, [context.access_chungcu]);
@@ -71,6 +71,7 @@ export default function QuanLyDanCu() {
             SoDienThoai: "",
             DienTich: 0,
             GhiChu: "",
+            IdChungCu: context.access_chungcu,
             TrangThai: false,
             PhuongTiens: [],
         });
