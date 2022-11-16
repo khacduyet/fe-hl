@@ -15,12 +15,15 @@ import { Calendar } from 'primereact/calendar';
 import { LOAINGUOIDUNG, vnCalendar } from "../../services/const";
 import { toast } from "react-toastify";
 import { outContext } from "../../App";
+import { Confirm } from "../common/common";
+import { ConfirmDialog } from "primereact/confirmdialog";
 
 export default function QuanLyDongPhi() {
     const navigate = useNavigate();
     const [listQuyTrinh, setListQuyTrinh] = useState([]);
     const [listLoaiXe, setListLoaiXe] = useState([]);
     const [tabTrangThai, setTabTrangThai] = useState({});
+    const [visible, setVisible] = useState(false)
     const [reset, setReset] = useState(false);
     const listThang = vnCalendar.monthNames.map((x, index) => {
         return { label: x, value: index + 1 }
@@ -121,6 +124,17 @@ export default function QuanLyDongPhi() {
 
     return (
         <>
+            {visible && (
+                <Confirm
+                    visible={visible}
+                    setVisible={setVisible}
+                    func={handleCreatePhieu}
+                    message="Bạn có chắc muốn tạo nhanh phiếu?"
+                    header="Thông báo!"
+                    acceptLabel="Đồng ý"
+                    rejectLabel="Hủy bỏ"
+                />
+            )}
             <h1 className="section-heading">Quản lý đóng phí</h1>
             <div className="container-haha">
                 <div className="flex flex-row justify-content-between">
@@ -133,7 +147,7 @@ export default function QuanLyDongPhi() {
                         <Button
                             label="Tạo nhanh phiếu tháng"
                             className="p-button-sm ml-2"
-                            onClick={handleCreatePhieu}
+                            onClick={() => setVisible(true)}
                         />
                     </div>
                     <div className="flex flex-row gap-3">
@@ -255,23 +269,21 @@ export default function QuanLyDongPhi() {
                             header="Số phiếu"
                         ></Column>
                         <Column
-                            style={{ width: "10%" }}
-                            field="Created"
+                            style={{ width: "8%" }}
+                            field="NguoiDongPhi"
                             headerClassName="text-center"
                             bodyClassName="text-center"
-                            body={(rowData) => {
-                                return formatDateStringGMT(rowData.Created);
-                            }}
-                            header="Thời gian tạo"
+                            header="Người đóng"
                         ></Column>
+
                         <Column
                             style={{ width: "10%" }}
                             field="TongTien"
                             headerClassName="text-center"
                             bodyClassName="text-center"
                             header="Tổng tiền"
-                            body={(rowData)=>{
-                                return formatCurrency(rowData.TongTien);
+                            body={(rowData) => {
+                                return <b>{formatCurrency(rowData.TongTien)}</b>;
                             }}
                         ></Column>
                         <Column
@@ -282,8 +294,19 @@ export default function QuanLyDongPhi() {
                         ></Column>
                         <Column
                             style={{ width: "10%" }}
+                            field="Created"
+                            headerClassName="text-center"
+                            bodyClassName="text-center"
+                            body={(rowData) => {
+                                return formatDateStringGMT(rowData.Created);
+                            }}
+                            header="Thời gian tạo phiếu"
+                        ></Column>
+                        <Column
+                            style={{ width: "10%" }}
                             field="TenTrangThai"
                             headerClassName="text-center"
+                            bodyClassName="text-center"
                             header="Trạng thái"
                             body={(rowData) => {
                                 return rowData.TrangThai ? <span style={{ color: "green" }}>Đã đóng phí</span> : <span style={{ color: "red" }}>Chưa đóng phí</span>
@@ -321,6 +344,7 @@ export default function QuanLyDongPhi() {
                     </div>
                 </div>
             </div>
+            <ConfirmDialog></ConfirmDialog>
         </>
     );
 }

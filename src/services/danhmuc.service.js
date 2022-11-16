@@ -15,6 +15,9 @@ export const DanhMucService = {
 };
 function ServiceGeneratorKBGG(opt) {
     return {
+        GetNextSo: () => {
+            return get(dm + 'GetNextSoPhieu')
+        },
         GetList: () => {
             return get(dm + 'GetList' + opt);
         },

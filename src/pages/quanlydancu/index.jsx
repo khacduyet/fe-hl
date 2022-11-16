@@ -95,7 +95,6 @@ export default function QuanLyDanCu() {
     const handleEdit = async (item) => {
         let edit = await DanhMucService.CanHo.Get(item.Id);
         if (edit) {
-            console.log("edit", edit);
             setHeader("Cập nhật");
             setItem(edit.Data);
             setVisible(true);
@@ -153,16 +152,35 @@ export default function QuanLyDanCu() {
     };
     const validate = () => {
         let validVar = ["Ma", "Ten", "SoDienThoai", "DienTich"];
-        return validForm(validVar, item);
+        if (!validForm(validVar, item)) {
+            toast.error("Vui lòng nhập đầy đủ các trường dữ liệu bắt buộc!");
+            return false;
+        }
+        let validVarChiTiet = [
+            "IdPhuongTien", "IdLoaiXe", "BienKiemSoat"
+        ];
+        let checkChiTiet = true;
+        item.PhuongTiens.forEach((chitiet) => {
+            if (!validForm(validVarChiTiet, chitiet)) {
+                checkChiTiet = false;
+                return false;
+            }
+        });
+        if (checkChiTiet === false) {
+            toast.error("Vui lòng nhập đầy đủ thông tin phương tiện!");
+            return false;
+        }
+        return true;
     };
 
     const handleAddRow = () => {
         let temp = [
             ...item.PhuongTiens,
             {
+                IdLoaiXe: "",
                 IdPhuongTien: "",
                 BienKiemSoat: "",
-                TrangThai: false,
+                TrangThai: true,
             },
         ];
         setForm(temp, "PhuongTiens");
@@ -170,6 +188,7 @@ export default function QuanLyDanCu() {
 
     const handleDeleteRow = (rowData, index) => {
         let temp = [...item.PhuongTiens];
+        console.log("index", index);
         temp.splice(index, 1);
         setForm(temp, "PhuongTiens");
     };
@@ -522,14 +541,14 @@ export default function QuanLyDanCu() {
                                 <Column
                                     bodyClassName="text-center"
                                     style={{ width: "1%" }}
-                                    body={(rowData, index) => (
+                                    body={(rowData, options) => (
                                         <>
                                             <Button
                                                 className="p-button-sm p-button-danger p-button-rounded"
                                                 type="button"
                                                 icon="pi pi-trash"
                                                 onClick={() => {
-                                                    handleDeleteRow(rowData, index);
+                                                    handleDeleteRow(rowData, options.rowIndex);
                                                 }}
                                             ></Button>
                                         </>

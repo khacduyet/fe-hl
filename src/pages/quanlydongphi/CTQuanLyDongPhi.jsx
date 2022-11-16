@@ -1,4 +1,5 @@
 import { Button } from "primereact/button";
+import { ConfirmDialog } from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputTextarea } from "primereact/inputtextarea";
 import { useEffect, useState } from "react";
@@ -27,8 +28,7 @@ export default function CTQuanLyDongPhi() {
         TuTuan: 1,
         ToiTuan: 1,
     });
-    const [giaoVien, setGiaoVien] = useState([]);
-    const [namHoc, setNamHoc] = useState([]);
+
     useEffect(() => {
         if (opt === "add") {
             getNextSo();
@@ -37,19 +37,19 @@ export default function CTQuanLyDongPhi() {
         }
         getAllOptions();
     }, [opt, id]);
+
     async function getNextSo() {
-        let data = await DanhMucService.KhaiBaoGioGiang.GetNextSo();
+        let data = await DanhMucService.QuanLyPhi.GetNextSo();
         if (data) {
-            await setForm(data.SoPhieu, "SoPhieu");
+            await setForm(data.Data, "SoPhieu");
             setIsLoading(false);
         }
     }
     async function getQuyTrinh(id) {
-        let data = await DanhMucService.KhaiBaoGioGiang.Get(id);
+        let data = await DanhMucService.QuanLyPhi.Get(id);
         if (data) {
             setQuyTrinh({
                 ...data,
-                NgaySuDung: new Date(data.NgaySuDung),
                 GhiChu: data.GhiChu || "",
             });
             await setIsLoading(false);
@@ -64,25 +64,24 @@ export default function CTQuanLyDongPhi() {
     };
     const handleAdd = async () => {
         if (validate()) {
-            let res = await DanhMucService.KhaiBaoGioGiang.Set(quyTrinh);
-            if (res && res.Error === 4) {
-                opt === "add" ? setQuyTrinh({ ...quyTrinh, listChiTiet: [] }) : <></>;
-                toast.success(res.Detail);
-                navigate(`/quytrinh/khaibaogiogiang/update/${res.Value}`, {
+            let res = await DanhMucService.QuanLyPhi.Set(quyTrinh);
+            if (res && res.StatusCode === 200) {
+                toast.success(res.Message);
+                navigate(`/quanlydongphi/update/${res.Data}`, {
                     replace: true,
                 });
             } else {
-                toast.error(res.Detail);
+                toast.error(res.Message);
             }
         }
     };
     const handleDelete = async () => {
-        let res = await DanhMucService.KhaiBaoGioGiang.Delete(quyTrinh.Id);
-        if (res && res.Error === 4) {
-            toast.success(res.Detail);
+        let res = await DanhMucService.QuanLyPhi.Delete(quyTrinh.Id);
+        if (res && res.StatusCode === 200) {
+            toast.success(res.Message);
             navigate(-1);
         } else {
-            toast.error(res.Detail);
+            toast.error(res.Message);
         }
     };
     const setForm = (e, key) => {
@@ -97,7 +96,7 @@ export default function CTQuanLyDongPhi() {
         }
     };
     const validate = () => {
-        let validVar = ["Nam", "TuTuan", "ToiTuan", "IdBoPhan"];
+        let validVar = ["Nam"];
         if (!validForm(validVar, quyTrinh)) {
             toast.error("Vui lòng nhập đầy đủ các trường dữ liệu bắt buộc!");
             return false;
@@ -108,13 +107,6 @@ export default function CTQuanLyDongPhi() {
         }
         let validVarChiTiet = [
             "NgayUnix",
-            "IdBoPhan",
-            "listIddmLop",
-            "IddmPhongHoc",
-            "IddmMon",
-            "listChiTiet_TietHoc",
-            "SoHocSinhCoMat_Truoc",
-            "SoHocSinhCoMat_Sau",
         ];
 
         if (quyTrinh.listChiTiet.length === 0) {
@@ -152,8 +144,9 @@ export default function CTQuanLyDongPhi() {
                     rejectLabel="Hủy bỏ"
                 />
             )}
+            <ConfirmDialog></ConfirmDialog>
             <h1 className="section-heading">
-                {opt === "add" ? "Thêm mới" : "Cập nhật"} khai báo giờ giảng
+                {opt === "add" ? "Thêm mới" : "Cập nhật"} phiếu thu
             </h1>
             <div className="container-haha">
                 <div className="main-navbar row">
@@ -162,26 +155,28 @@ export default function CTQuanLyDongPhi() {
                             <Button
                                 label="Quay lại"
                                 tooltip="Quay lại"
-                                className="MyBtn p-button-sm "
+                                className="p-button-sm  "
                                 onClick={handleBack}
                             />
                             <Button
                                 label="Ghi lại"
                                 tooltip="Ghi lại"
-                                className="MyBtn p-button-sm "
+                                className="p-button-sm ml-2"
                                 onClick={() => {
                                     setIsLoading(false);
                                     handleAdd();
                                 }}
                             />
-                            <Button
-                                label="Xóa"
-                                tooltip="Xóa"
-                                className="MyBtn p-button-sm p-button-danger"
-                                onClick={() => {
-                                    setVisible(true);
-                                }}
-                            />
+                            {opt === "edit" &&
+                                <Button
+                                    label="Xóa"
+                                    tooltip="Xóa"
+                                    className="p-button-sm p-button-danger ml-2"
+                                    onClick={() => {
+                                        setVisible(true);
+                                    }}
+                                />
+                            }
                         </div>
                     </div>
                     <div className="col-xs-12 col-md-8 col-lg-8 col-xl-8">
@@ -209,17 +204,15 @@ export default function CTQuanLyDongPhi() {
                             </div>
                             <div
                                 className="ellipsis-span"
-                                data-title={formatDateStringGMT(quyTrinh.Created)}
                             >
                                 <b>TG tạo: </b>
                                 {formatDateStringGMT(quyTrinh.Created)}
                             </div>
                             <div
                                 className="ellipsis-span"
-                                data-title={formatDateStringGMT(quyTrinh.Modified)}
                             >
-                                <b>TG duyệt: </b>
-                                {quyTrinh.isKetThuc &&
+                                <b>TG đóng tiền: </b>
+                                {
                                     formatDateStringGMT(quyTrinh.Modified)}
                             </div>
                         </div>
@@ -228,22 +221,6 @@ export default function CTQuanLyDongPhi() {
                 <hr />
                 <div className="p-3">
                     <div className="formgrid grid">
-                        <div className="field col-12 md:col-3 lg:col-2">
-                            <label>Giáo viên:</label>
-                            <Dropdown
-                                resetFilterOnHide={true}
-                                className="p-inputtext-sm w-full"
-                                placeholder="Chọn giáo viên"
-                                value={quyTrinh.IdUserGiaoVien}
-                                options={giaoVien.map((ele) => {
-                                    return { value: ele.Id, label: ele.TenNhanVien };
-                                })}
-                                onChange={(e) => {
-                                    setForm(e.value, "IdUserGiaoVien");
-                                }}
-                                filter
-                            />
-                        </div>
                         <div className="field col-12 md:col-3 lg:col-2">
                             <label>
                                 Bộ phận/Khoa<span className="text-red-500">(*)</span>:
@@ -261,33 +238,6 @@ export default function CTQuanLyDongPhi() {
                                 filter
                                 filterBy="label"
                                 placeholder="Chọn bộ phận/Khoa"
-                            />
-                        </div>
-                        <div className="field col-12 md:col-3 lg:col-2">
-                            <label>
-                                Năm<span className="text-red-500">(*)</span>:
-                            </label>
-                            <Dropdown
-                                resetFilterOnHide={true}
-                                className="w-full p-inputtext-sm"
-                                value={quyTrinh.Nam}
-                                options={namHoc.map((ele) => {
-                                    return { label: ele.Nam, value: ele.Nam };
-                                })}
-                                onChange={(e) => {
-                                    if (quyTrinh.listChiTiet.length > 0) {
-                                        setVisibleRemove(true);
-                                        setTempData({
-                                            ...tempData,
-                                            Nam: e.value,
-                                            ToiTuan: 1,
-                                            TuTuan: 1,
-                                        });
-                                    } else setForm(e.value, "Nam");
-                                }}
-                                filter
-                                filterBy="label"
-                                placeholder="Chọn năm"
                             />
                         </div>
                         <div className="field col-12 md:col-3 lg:col-2">

@@ -29,7 +29,7 @@ root.render(
         <Route path="/danhmuc/canho" element={<QuanLyDanCu />} />
         <Route path="/danhmuc/xengoai" element={<XeNgoai />} />
         <Route path="/quanlydongphi" element={<QuanLyDongPhi />} />
-        <Route path="/quanlydongphi/:opt" element={<CTQuanLyDongPhi />} />
+        <Route path="/quanlydongphi/:opt/:id" element={<CTQuanLyDongPhi />} />
 
         {/* <Route path="/quytrinh/khaibaogiogiang" element={<DSKhaiBaoGioGiang />} />
         <Route path="/quytrinh/khaibaogiogiang/:opt/:id" element={<CTKhaiBaoGioGiang />} /> */}
