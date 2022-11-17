@@ -19,6 +19,7 @@ export default function XeNgoai() {
   const [listItem, setListItem] = useState([]);
   const [phuongTiens, setPhuongTiens] = useState([]);
   const [loaiXes, setLoaiXes] = useState([]);
+  const [reset, setReset] = useState(false);
   const context = useContext(outContext);
   const [filter, setFilter] = useState({
     Keyword: "",
@@ -36,7 +37,7 @@ export default function XeNgoai() {
   useEffect(() => {
     getList();
     getAllOptions();
-  }, [filter]);
+  }, [filter.IdLoaiXe, filter.IdPhuongTien, reset]);
   const getAllOptions = async () => {
     let $cLoaiPhuongTien = cLoaiPhuongTien();
     let $cLoaiXe = cLoaiXe();
@@ -107,7 +108,7 @@ export default function XeNgoai() {
       accept: async () => {
         let $delete = await DanhMucService.XeNgoai.Delete(item.Id);
         if ($delete) {
-          if ($delete.statusCode === 200) {
+          if ($delete.StatusCode === 200) {
             toast.success($delete.Message);
           } else {
             toast.error($delete.Message);
@@ -118,6 +119,27 @@ export default function XeNgoai() {
       reject: () => getList(),
     });
   };
+
+  const handleImport = async () => {
+
+  }
+
+  const handleExport = async () => {
+    let _fil = {
+      ...filter
+    }
+    let res = await DanhMucService.XeNgoai.Export(_fil);
+    if (res){
+      if (res.StatusCode === 200) {
+        toast.success(res.Message);
+        let url =window.location.origin;
+        window.location.replace(url + res.Data)
+      } else {
+        toast.error(res.Message);
+      }
+    }
+  }
+
   const onHide = () => {
     setVisible(false);
     setItem({});
@@ -170,6 +192,82 @@ export default function XeNgoai() {
               className="p-button-sm"
               onClick={handleAdd}
             />
+            <Button
+              label="Nhập dữ liệu"
+              className="p-button-sm ml-2"
+              onClick={handleImport}
+            />
+            <Button
+              label="Xuất dữ liệu"
+              className="p-button-sm ml-2"
+              onClick={handleExport}
+            />
+          </div>
+          <div className="flex flex-row gap-3">
+            <Dropdown
+              resetFilterOnHide={true}
+              style={{ width: "150px" }}
+              className="p-inputtext-sm"
+              value={filter.IdPhuongTien}
+              options={phuongTiens.map((ele) => {
+                return { value: ele.Id, label: ele.Ten };
+              })}
+              onChange={(e) => {
+                setFil(e.value, "IdPhuongTien");
+              }}
+              filter
+              filterBy="label"
+              placeholder="Chọn phương tiện"
+            />
+            <Dropdown
+              resetFilterOnHide={true}
+              style={{ width: "300px" }}
+              className="p-inputtext-sm"
+              value={filter.IdLoaiXe}
+              options={loaiXes.map((ele) => {
+                return { value: ele.Id, label: ele.Ten };
+              })}
+              onChange={(e) => {
+                setFil(e.value, "IdLoaiXe");
+              }}
+              filter
+              filterBy="label"
+              placeholder="Chọn loại xe"
+            />
+            <div className="p-inputgroup">
+              <InputText
+                className="p-inputtext-sm"
+                placeholder="Tìm kiếm" style={{ width: "300px" }}
+                value={filter.KeyWord}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") return getList();
+                }}
+                onChange={(e) => {
+                  setFil(e.target.value, "Keyword");
+                }}
+              />
+              <Button
+                icon="pi pi-search"
+                className="p-button-primary"
+                onClick={() => {
+                  getList();
+                }}
+              />
+              <Button
+                icon="pi pi-refresh"
+                className="p-button-primary"
+                onClick={() => {
+                  setFilter({
+                    ...{
+                      LoaiNguoiDung: 1,
+                      Thang: 1,
+                      Keyword: "",
+                    },
+                  });
+                  setReset(!reset);
+                }}
+              />
+            </div>
           </div>
         </div>
         <DataTable

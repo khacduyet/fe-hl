@@ -22,7 +22,6 @@ export default function QuanLyDongPhi() {
     const navigate = useNavigate();
     const [listQuyTrinh, setListQuyTrinh] = useState([]);
     const [listLoaiXe, setListLoaiXe] = useState([]);
-    const [tabTrangThai, setTabTrangThai] = useState({});
     const [visible, setVisible] = useState(false)
     const [reset, setReset] = useState(false);
     const listThang = vnCalendar.monthNames.map((x, index) => {

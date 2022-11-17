@@ -35,6 +35,12 @@ function ServiceGeneratorKBGG(opt) {
         },
         TaoNhanhPhieu: (data) => {
             return post(dm + 'CreatePhieu', data);
+        },
+        Import: (filename, id) => {
+            return get(dm + 'Import' + opt + "?FileName=" + filename + "&IdChungCu=" + id);
+        },
+        Export: (data) => {
+            return post(dm + 'Export' + opt, data);
         }
     }
 }
