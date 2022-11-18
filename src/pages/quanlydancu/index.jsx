@@ -13,6 +13,7 @@ import { validForm } from "../../services/helperfunction";
 import { Dropdown } from "primereact/dropdown";
 import { cLoaiPhuongTien, cLoaiXe } from "../common/apiservice";
 import { outContext } from "../../App";
+import { FileUpload } from "primereact/fileupload";
 
 export default function QuanLyDanCu() {
     const { toast } = useOutletContext();
@@ -201,6 +202,43 @@ export default function QuanLyDanCu() {
         };
         setForm(temp, "PhuongTiens");
     };
+    const handleImport = async (e) => {
+        const formData = new FormData();
+        formData.append("file", e.files[0]);
+        let up = await DanhMucService.CanHo.UploadFile(formData);
+        if (up) {
+          let res = await DanhMucService.CanHo.Import(
+            up.files[0].name,
+            filter.IdChungCu
+          );
+          if (res && res.StatusCode === 200) {
+            toast.success(res.Message);
+            getList();
+          } else {
+            toast.error(res.Message);
+          }
+        }
+      };
+    
+      const handleExport = async () => {
+        let _fil = {
+          ...filter,
+        };
+        let res = await DanhMucService.CanHo.Export(_fil);
+        if (res) {
+          if (res.StatusCode === 200) {
+            toast.success(res.Message);
+            let url = window.location.origin;
+            window.location.replace(url + res.Data);
+          } else {
+            toast.error(res.Message);
+          }
+        }
+      };
+    const chooseOptions = {
+      label: "Nhập dữ liệu",
+      className: "p-button-sm",
+    };
 
     return (
         <>
@@ -213,6 +251,19 @@ export default function QuanLyDanCu() {
                             className="p-button-sm"
                             onClick={handleAdd}
                         />
+                        <FileUpload
+              mode="basic"
+              name="file"
+              auto
+              chooseOptions={chooseOptions}
+              className="p-button-sm ml-2 inline-block"
+              onUpload={handleImport}
+            />
+            <Button
+              label="Xuất dữ liệu"
+              className="p-button-sm ml-2"
+              onClick={handleExport}
+            />
                     </div>
                 </div>
                 <DataTable
