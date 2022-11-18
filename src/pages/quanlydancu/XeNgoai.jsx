@@ -7,6 +7,7 @@ import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
+import { FileUpload } from "primereact/fileupload";
 import { useContext, useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { outContext } from "../../App";
@@ -120,25 +121,39 @@ export default function XeNgoai() {
     });
   };
 
-  const handleImport = async () => {
-
-  }
-
-  const handleExport = async () => {
-    let _fil = {
-      ...filter
-    }
-    let res = await DanhMucService.XeNgoai.Export(_fil);
-    if (res){
-      if (res.StatusCode === 200) {
+  const handleImport = async (e) => {
+    const formData = new FormData();
+    formData.append("file", e.files[0]);
+    let up = await DanhMucService.XeNgoai.UploadFile(formData);
+    if (up) {
+      let res = await DanhMucService.XeNgoai.Import(
+        up.files[0].name,
+        filter.IdChungCu
+      );
+      if (res && res.StatusCode === 200) {
         toast.success(res.Message);
-        let url =window.location.origin;
-        window.location.replace(url + res.Data)
+        getList();
       } else {
         toast.error(res.Message);
       }
     }
-  }
+  };
+
+  const handleExport = async () => {
+    let _fil = {
+      ...filter,
+    };
+    let res = await DanhMucService.XeNgoai.Export(_fil);
+    if (res) {
+      if (res.StatusCode === 200) {
+        toast.success(res.Message);
+        let url = window.location.origin;
+        window.location.replace(url + res.Data);
+      } else {
+        toast.error(res.Message);
+      }
+    }
+  };
 
   const onHide = () => {
     setVisible(false);
@@ -180,6 +195,10 @@ export default function XeNgoai() {
     ];
     return validForm(validVar, item);
   };
+  const chooseOptions = {
+    label: "Nhập dữ liệu",
+    className: "p-button-sm",
+  };
 
   return (
     <>
@@ -192,10 +211,13 @@ export default function XeNgoai() {
               className="p-button-sm"
               onClick={handleAdd}
             />
-            <Button
-              label="Nhập dữ liệu"
-              className="p-button-sm ml-2"
-              onClick={handleImport}
+            <FileUpload
+              mode="basic"
+              name="file"
+              auto
+              chooseOptions={chooseOptions}
+              className="p-button-sm ml-2 inline-block"
+              onUpload={handleImport}
             />
             <Button
               label="Xuất dữ liệu"
@@ -237,7 +259,8 @@ export default function XeNgoai() {
             <div className="p-inputgroup">
               <InputText
                 className="p-inputtext-sm"
-                placeholder="Tìm kiếm" style={{ width: "300px" }}
+                placeholder="Tìm kiếm"
+                style={{ width: "300px" }}
                 value={filter.KeyWord}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") return getList();

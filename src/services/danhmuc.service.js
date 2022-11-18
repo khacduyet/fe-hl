@@ -41,6 +41,9 @@ function ServiceGeneratorKBGG(opt) {
         },
         Export: (data) => {
             return post(dm + 'Export' + opt, data);
+        },
+        UploadFile: (data) => {
+            return post("FileUploader/Post", data);
         }
     }
 }
