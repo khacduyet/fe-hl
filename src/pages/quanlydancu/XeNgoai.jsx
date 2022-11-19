@@ -215,6 +215,7 @@ export default function XeNgoai() {
               mode="basic"
               name="file"
               auto
+              accept=".xls,.xlsx"
               chooseOptions={chooseOptions}
               className="p-button-sm ml-2 inline-block"
               onUpload={handleImport}

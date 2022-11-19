@@ -195,7 +195,7 @@ export default function QuanLyDongPhi() {
                             <InputText
                                 className="p-inputtext-sm"
                                 placeholder="Tìm kiếm" style={{ width: "300px" }}
-                                value={filter.KeyWord}
+                                value={filter.Keyword}
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter") return getList();
                                 }}
@@ -218,8 +218,9 @@ export default function QuanLyDongPhi() {
                                     setPaging({ ...paging, CurrentPage: 1 });
                                     setFilter({
                                         ...{
+                                            ...filter,
                                             LoaiNguoiDung: 1,
-                                            Thang: 1,
+                                            Thang: 0,
                                             Keyword: "",
                                         },
                                     });
@@ -300,6 +301,13 @@ export default function QuanLyDongPhi() {
                                 return formatDateStringGMT(rowData.Created);
                             }}
                             header="Thời gian tạo phiếu"
+                        ></Column>
+                        <Column
+                            style={{ width: "10%" }}
+                            field="CreatedByName"
+                            headerClassName="text-center"
+                            bodyClassName="text-center"
+                            header="Người tạo phiếu"
                         ></Column>
                         <Column
                             style={{ width: "10%" }}
