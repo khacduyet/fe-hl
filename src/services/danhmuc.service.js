@@ -24,6 +24,9 @@ function ServiceGeneratorKBGG(opt) {
         GetListFilter: (data) => {
             return post(dm + 'GetList' + opt, data);
         },
+        GetListFilterCreated: (data) => {
+            return post(dm + 'GetListFilterCreated', data);
+        },
         Set: (data) => {
             return post(dm + 'Set' + opt, data)
         },

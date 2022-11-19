@@ -23,8 +23,7 @@ export default function CTQuanLyDongPhi() {
     isXeNgoai: false,
   });
   const [thongTins, setThongTins] = useState([]);
-  const [cuDans, setCuDans] = useState([]);
-  const [xeNgoais, setXeNgoais] = useState([]);
+  const [panels, setPanels] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   let [weekIsDisabled, setWeekIsDisabled] = useState(0);
   const [enableBtn, setEnableBtn] = useState(opt === "add" ? true : false);
@@ -64,6 +63,24 @@ export default function CTQuanLyDongPhi() {
     }
   }
   async function getAllOptions() {}
+
+  const getDataOverPanel = async () => {
+    let data = {
+      IdChungCu: quyTrinh.IdChungCu,
+      isXeNgoai: quyTrinh.isXeNgoai,
+    };
+    let res = await DanhMucService.QuanLyPhi.GetListFilterCreated(data);
+    if (res) {
+      console.log("res", res);
+      let temp = res.Data.map((x, index) => {
+        return { ...x, STT: index + 1 };
+      });
+      setPanels(temp);
+    }
+  };
+  useEffect(() => {
+    getDataOverPanel();
+  }, [quyTrinh.isXeNgoai]);
 
   const handleBack = () => {
     navigate(-1);
@@ -291,7 +308,7 @@ export default function CTQuanLyDongPhi() {
                 onClick={(e) => op.current.toggle(e)}
               />
               <OverlayPanel ref={op}>
-                <OverPanel listData={[]} isXeNgoai={quyTrinh.isXeNgoai}/>
+                <OverPanel listData={panels} isXeNgoai={quyTrinh.isXeNgoai} />
               </OverlayPanel>
             </div>
           </div>

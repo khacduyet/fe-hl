@@ -1,12 +1,12 @@
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 
-export default function OverPanel({listData, isXeNgoai}) {
+export default function OverPanel({ listData, isXeNgoai }) {
   return (
     <>
       <DataTable
         className="p-datatable p-component p-datatable-selectable p-datatable-responsive-stack"
-        style={{width: "500px"}}
+        style={{ width: "500px" }}
         value={listData}
       >
         <Column
@@ -18,32 +18,29 @@ export default function OverPanel({listData, isXeNgoai}) {
         ></Column>
         <Column
           style={{ width: "8%" }}
-          field="SoPhieu"
+          field="Ma"
           headerClassName="text-center"
           bodyClassName="text-center"
           header="Mã"
         ></Column>
         <Column
           style={{ width: "8%" }}
-          field="NguoiDongPhi"
+          field="Ten"
           headerClassName="text-center"
           bodyClassName="text-center"
           header="Tên"
         ></Column>
         <Column
           style={{ width: "10%" }}
-          field="TenTrangThai"
+          field="ChuSoHuu"
           headerClassName="text-center"
           bodyClassName="text-center"
-          header={()=>{
-            return isXeNgoai ? "Biển kiểm soát" : "Chủ sở hữu"
+          header={() => {
+            return isXeNgoai ? "Biển kiểm soát" : "Chủ sở hữu";
           }}
           body={(rowData) => {
-            return rowData.TrangThai ? (
-              <span style={{ color: "green" }}>Đã đóng phí</span>
-            ) : (
-              <span style={{ color: "red" }}>Chưa đóng phí</span>
-            );
+            console.log(rowData);
+            return isXeNgoai ? rowData.ChuSoHuu : rowData.BienKiemSoat;
           }}
         ></Column>
       </DataTable>
