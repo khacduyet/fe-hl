@@ -12,6 +12,7 @@ import { ToggleButton } from "primereact/togglebutton";
 import { OverlayPanel } from "primereact/overlaypanel";
 import Loading from "../common/loading";
 import OverPanel from "./OverPanel";
+import { LOAIDONGPHI } from "../../services/const";
 
 export default function CTQuanLyDongPhi() {
   const { toast } = useOutletContext();
@@ -254,27 +255,16 @@ export default function CTQuanLyDongPhi() {
               <Dropdown
                 resetFilterOnHide={true}
                 className="w-full p-inputtext-sm"
-                value={quyTrinh.TuTuan}
-                // options={listTuan}
-                // itemTemplate={dropdownOptionTemplate}
+                value={quyTrinh.LoaiDongPhi}
+                options={LOAIDONGPHI.map((x) => {
+                  return { value: x, label: x };
+                })}
                 onChange={(e) => {
-                  if (quyTrinh.listChiTiet.length > 0) {
-                    setVisibleRemove(true);
-                    setTempData({
-                      ...tempData,
-                      ToiTuan: null,
-                      TuTuan: e.value,
-                    });
-                  } else {
-                    setForm(null, "ToiTuan");
-                    setWeekIsDisabled(e.value);
-                    setForm(e.value, "TuTuan");
-                    setEnableBtn(true);
-                  }
+                  setForm(e.target.value, "LoaiDongPhi");
                 }}
                 filter
                 filterBy="value"
-                placeholder="Chọn tuần"
+                placeholder="Chọn loại đóng phí"
               />
             </div>
             <div className="field col col-12 md:col-12">
@@ -287,11 +277,11 @@ export default function CTQuanLyDongPhi() {
                 onChange={(e) => setForm(e.target.value, "NoiDung")}
               />
             </div>
-            <div className="field col col-12 md:col-1">
+            <div className="field col col-12 md:col-2">
               <label>Cư dân/Xe Ngoài:</label>
               <ToggleButton
-                onLabel="Xe ngoài"
-                offLabel="Cư dân"
+                onLabel="XE NGOÀI"
+                offLabel="CƯ DÂN"
                 onIcon="pi pi-car"
                 offIcon="pi pi-home"
                 className="w-full"
