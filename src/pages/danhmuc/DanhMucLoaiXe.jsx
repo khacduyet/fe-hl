@@ -50,6 +50,7 @@ export default function DanhMucLoaiXe() {
       Ma: "",
       Ten: "",
       GhiChu: "",
+      TrangThai: true
     });
     setVisible(true);
   };

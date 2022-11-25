@@ -13,6 +13,7 @@ import { OverlayPanel } from "primereact/overlaypanel";
 import Loading from "../common/loading";
 import OverPanel from "./OverPanel";
 import { LOAIDONGPHI } from "../../services/const";
+import Table from "./Table";
 
 export default function CTQuanLyDongPhi() {
   const { toast } = useOutletContext();
@@ -325,6 +326,9 @@ export default function CTQuanLyDongPhi() {
                   quyTrinh={quyTrinh}
                 />
               </OverlayPanel>
+            </div>
+            <div className="field col col-12 md:col-12">
+              <Table />
             </div>
           </div>
         </div>

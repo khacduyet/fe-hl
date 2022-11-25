@@ -75,7 +75,7 @@ export default function QuanLyDanCu() {
       DienTich: 0,
       GhiChu: "",
       IdChungCu: context.access_chungcu,
-      TrangThai: false,
+      TrangThai: true,
       PhuongTiens: [],
     });
     setVisible(true);
@@ -505,7 +505,7 @@ export default function QuanLyDanCu() {
                 Danh sách xe:
               </label>
               <DataTable
-                className="p-datatable-sm p-datatable-gridlines pt-5"
+                className="p-datatable-sm p-datatable-gridlines pt-1"
                 value={item.PhuongTiens}
                 paginatorLeft={"Tổng số bản ghi " + item.PhuongTiens?.length}
                 paginatorClassName="justify-content-end"

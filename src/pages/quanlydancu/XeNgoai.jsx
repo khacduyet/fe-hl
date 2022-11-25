@@ -72,7 +72,7 @@ export default function XeNgoai() {
       SoDienThoai: "",
       GhiChu: "",
       IdChungCu: context.access_chungcu,
-      TrangThai: false,
+      TrangThai: true,
     });
     setVisible(true);
   };

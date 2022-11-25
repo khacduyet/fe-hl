@@ -50,6 +50,7 @@ export default function DanhMucPhuongTien() {
       Ma: "",
       Ten: "",
       GhiChu: "",
+      TrangThai: true
     });
     setVisible(true);
   };

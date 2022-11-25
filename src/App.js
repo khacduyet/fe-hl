@@ -28,7 +28,7 @@ function App() {
   const getOptions = async () => {
     let $chungcu = await cChungCu();
     if ($chungcu) {
-      setChungCu($chungcu);
+      setChungCu($chungcu.sort((a, b) => a.Ma > b.Ma ? 1 : -1));
       changeCC($chungcu[0].Id)
     }
   }
@@ -60,7 +60,7 @@ function App() {
             <div className="d-flex justify-content-between align-items-center">
               <div className="">
                 <Dropdown
-                  className="w-full"
+                  className="w-full input-text"
                   value={cookies['access_chungcu']}
                   options={chungCu?.map((x) => {
                     return { label: x.Ten, value: x.Id };
