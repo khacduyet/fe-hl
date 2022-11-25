@@ -175,7 +175,7 @@ code {
   font-size: 12px;
 }
 .ellipsis-span {
-  font-size: 18px;
+  font-size: 16px;
   margin-right: 20px;
 }
 @media (min-width: 576px) {
@@ -209,4 +209,22 @@ code {
 }
 .p-dropdown-items-wrapper {
   min-height: 200px;
+}
+
+.status-false {
+  background: #ffcdd2;
+  color: #c63737;
+}
+.status-true {
+  background: #c8e6c9;
+  color: #256029;
+}
+
+.product-badge {
+  border-radius: 2px;
+  padding: 0.25em 0.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
 }

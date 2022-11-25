@@ -26,16 +26,9 @@ export default function CTQuanLyDongPhi() {
   const [thongTins, setThongTins] = useState([]);
   const [panels, setPanels] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  let [weekIsDisabled, setWeekIsDisabled] = useState(0);
-  const [enableBtn, setEnableBtn] = useState(opt === "add" ? true : false);
+  const [isChange, setIsChange] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [visibleRemove, setVisibleRemove] = useState(false);
   const op = useRef(null);
-  const [tempData, setTempData] = useState({
-    Nam: new Date().getFullYear(),
-    TuTuan: 1,
-    ToiTuan: 1,
-  });
 
   useEffect(() => {
     if (opt === "add") {
@@ -72,11 +65,11 @@ export default function CTQuanLyDongPhi() {
     };
     let res = await DanhMucService.QuanLyPhi.GetListFilterCreated(data);
     if (res) {
-      console.log("res", res);
       let temp = res.Data.map((x, index) => {
         return { ...x, STT: index + 1 };
       });
       setPanels(temp);
+      await setIsChange(false);
     }
   };
   useEffect(() => {
@@ -147,6 +140,27 @@ export default function CTQuanLyDongPhi() {
       return false;
     }
     return true;
+  };
+
+  const handleAddDetail = (x) => {
+    console.log("data", x);
+    if (quyTrinh.isXeNgoai) {
+      let data = {
+        ...quyTrinh,
+        IdXeNgoai: x.Id,
+        IdLoaiXe: x.IdLoaiXe,
+        IdCanHo: "",
+      };
+      setQuyTrinh(data);
+    } else {
+      let data = {
+        ...quyTrinh,
+        IdXeNgoai: "",
+        IdLoaiXe: "",
+        IdCanHo: x.Id,
+      };
+      setQuyTrinh(data);
+    }
   };
 
   if (isLoading) {
@@ -286,7 +300,10 @@ export default function CTQuanLyDongPhi() {
                 offIcon="pi pi-home"
                 className="w-full"
                 checked={quyTrinh.isXeNgoai}
-                onChange={(e) => setForm(!quyTrinh.isXeNgoai, "isXeNgoai")}
+                onChange={(e) => {
+                  setIsChange(true);
+                  setForm(!quyTrinh.isXeNgoai, "isXeNgoai");
+                }}
               />
             </div>
             <div className="field col col-12 md:col-5">
@@ -296,9 +313,17 @@ export default function CTQuanLyDongPhi() {
                 type="button"
                 label="Chọn"
                 onClick={(e) => op.current.toggle(e)}
+                loading={isChange}
+                loadingIcon="pi pi-spin pi-sun"
               />
+
               <OverlayPanel ref={op}>
-                <OverPanel listData={panels} isXeNgoai={quyTrinh.isXeNgoai} />
+                <OverPanel
+                  listData={panels}
+                  isXeNgoai={quyTrinh.isXeNgoai}
+                  handleAddDetail={handleAddDetail}
+                  quyTrinh={quyTrinh}
+                />
               </OverlayPanel>
             </div>
           </div>
