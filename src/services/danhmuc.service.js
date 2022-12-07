@@ -50,6 +50,12 @@ function ServiceGeneratorKBGG(opt) {
         },
         GetPhieuThu: (data) => {
             return get(dm + "GetThongTinPhieuThu?Id=" + data.id + "&isXeNgoai=" + data.isXeNgoai);
-        }
+        },
+        SetDongPhi: (id) => {
+            return get(dm + 'SetDongPhi?Id=' + id);
+        },
+        SetDongPhiMultiple: (data) => {
+            return post(dm + 'SetDongPhiMultiple', data);
+        },
     }
 }

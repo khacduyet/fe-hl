@@ -37,11 +37,11 @@ export default function Table() {
 
   useEffect(() => {
     let total = 0;
-    // context?.quyTrinh.ListPhi.map((x) => {
-    //   total += parseFloat(x.ThanhTien);
-    // });
-    // setTongTien(total);
-    // context.setForm(total, "TongTien");
+    context?.quyTrinh.ListPhi.map((x) => {
+      total += parseFloat(x.ThanhTien);
+    });
+    setTongTien(total);
+    context.setForm(total, "TongTien");
   });
 
   return (

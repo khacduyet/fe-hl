@@ -29,6 +29,7 @@ export default function QuanLyDongPhi() {
   const [listLoaiXe, setListLoaiXe] = useState([]);
   const [visible, setVisible] = useState(false);
   const [reset, setReset] = useState(false);
+  const [selected, setSelected] = useState(null);
   const listThang = vnCalendar.monthNames.map((x, index) => {
     return { label: x, value: index + 1 };
   });
@@ -163,6 +164,11 @@ export default function QuanLyDongPhi() {
               className="p-button-sm ml-2"
               onClick={() => setVisible(true)}
             />
+            <Button
+              label="Xác nhận đóng phí"
+              className="p-button-sm p-button-success ml-2"
+              onClick={handleAdd}
+            />
           </div>
           <div className="flex flex-row gap-3">
             <Dropdown
@@ -193,7 +199,7 @@ export default function QuanLyDongPhi() {
             />
             <Dropdown
               resetFilterOnHide={true}
-              style={{ width: "300px" }}
+              style={{ width: "150px" }}
               className="p-inputtext-sm"
               value={filter.IdLoaiXe}
               options={listLoaiXe.map((ele) => {
@@ -210,7 +216,7 @@ export default function QuanLyDongPhi() {
               <InputText
                 className="p-inputtext-sm"
                 placeholder="Tìm kiếm"
-                style={{ width: "300px" }}
+                style={{ width: "150px" }}
                 value={filter.Keyword}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") return getList();
@@ -263,7 +269,15 @@ export default function QuanLyDongPhi() {
           <DataTable
             className="p-datatable-sm p-datatable-gridlines"
             value={listQuyTrinh}
+            selection={selected}
+            onSelectionChange={(e) => setSelected(e.value)}
+            dataKey="Id"
+            responsiveLayout="scroll"
           >
+            <Column
+              selectionMode="multiple"
+              headerStyle={{ width: "2%" }}
+            ></Column>
             <Column
               bodyClassName="text-center"
               field="STT"

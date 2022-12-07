@@ -38,6 +38,7 @@ export default function CTQuanLyDongPhi() {
   const [isLoading, setIsLoading] = useState(true);
   const [isChange, setIsChange] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [accept, setAccept] = useState(false);
   const op = useRef(null);
 
   useEffect(() => {
@@ -99,6 +100,16 @@ export default function CTQuanLyDongPhi() {
       } else {
         toast.error(res.Message);
       }
+    }
+  };
+
+  const handleAccept = async () => {
+    let res = await DanhMucService.QuanLyPhi.SetDongPhi(quyTrinh.Id);
+    if (res && res.StatusCode === 200) {
+      toast.success(res.Message);
+      navigate(-1);
+    } else {
+      toast.error(res.Message);
     }
   };
   const handleDelete = async () => {
@@ -207,6 +218,17 @@ export default function CTQuanLyDongPhi() {
           rejectLabel="Hủy bỏ"
         />
       )}
+      {accept && (
+        <Confirm
+          visible={accept}
+          setVisible={setAccept}
+          func={handleAccept}
+          message="Bạn có chắc phiếu này đã đóng tiền!"
+          header="Thông báo!"
+          acceptLabel="Đồng ý"
+          rejectLabel="Hủy bỏ"
+        />
+      )}
       <ConfirmDialog></ConfirmDialog>
       <h1 className="section-heading">
         {opt === "add" ? "Thêm mới" : "Cập nhật"} phiếu thu
@@ -239,6 +261,16 @@ export default function CTQuanLyDongPhi() {
                   className="p-button-sm p-button-danger ml-2"
                   onClick={() => {
                     setVisible(true);
+                  }}
+                />
+              )}
+              {!quyTrinh.TrangThai && opt === "update" && (
+                <Button
+                  label="Xác nhận đóng phí"
+                  tooltip="Xác nhận đóng phí"
+                  className="p-button-sm p-button-success ml-2"
+                  onClick={() => {
+                    setAccept(true);
                   }}
                 />
               )}
