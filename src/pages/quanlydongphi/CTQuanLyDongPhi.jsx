@@ -3,19 +3,24 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { DanhMucService } from "../../services/danhmuc.service";
 import { formatDateStringGMT, validForm } from "../../services/helperfunction";
-import { Confirm } from "../common/common";
+import { capitalizeFirstLowercaseRest, Confirm } from "../common/common";
 import { ToggleButton } from "primereact/togglebutton";
 import { OverlayPanel } from "primereact/overlaypanel";
 import Loading from "../common/loading";
 import OverPanel from "./OverPanel";
 import { LOAIDONGPHI } from "../../services/const";
 import Table from "./Table";
+import { createContext } from "react";
+import { outContext } from "../../App";
+
+export const PhiContext = createContext();
 
 export default function CTQuanLyDongPhi() {
+  const context = useContext(outContext);
   const { toast } = useOutletContext();
   const { opt, id } = useParams();
   const navigate = useNavigate();
@@ -23,8 +28,12 @@ export default function CTQuanLyDongPhi() {
     Id: "",
     TrangThai: false,
     isXeNgoai: false,
+    ListPhi: [],
+    IdChungCu: context.access_chungcu,
   });
-  const [thongTins, setThongTins] = useState([]);
+  useEffect(() => {
+    setForm(context.access_chungcu, "IdChungCu");
+  }, [context.access_chungcu]);
   const [panels, setPanels] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isChange, setIsChange] = useState(false);
@@ -51,8 +60,7 @@ export default function CTQuanLyDongPhi() {
     let data = await DanhMucService.QuanLyPhi.Get(id);
     if (data) {
       setQuyTrinh({
-        ...data,
-        GhiChu: data.GhiChu || "",
+        ...data.Data,
       });
       await setIsLoading(false);
     }
@@ -114,54 +122,72 @@ export default function CTQuanLyDongPhi() {
     }
   };
   const validate = () => {
-    let validVar = ["Nam"];
+    let validVar = ["NguoiDongPhi", "SoDienThoai", "LoaiDongPhi"];
     if (!validForm(validVar, quyTrinh)) {
       toast.error("Vui lòng nhập đầy đủ các trường dữ liệu bắt buộc!");
-      return false;
-    }
-    if (quyTrinh.TuTuan > quyTrinh.ToiTuan) {
-      toast.error("Vui lòng nhập lại từ tuần tới tuần!");
-      return false;
-    }
-    let validVarChiTiet = ["NgayUnix"];
-
-    if (quyTrinh.listChiTiet.length === 0) {
-      toast.error("Vui lòng nhập đầy đủ thông tin giảng dạy!");
-      return false;
-    }
-    let checkChiTiet = true;
-    quyTrinh.listChiTiet.forEach((chitiet) => {
-      if (!validForm(validVarChiTiet, chitiet)) {
-        checkChiTiet = false;
-        return false;
-      }
-    });
-    if (checkChiTiet === false) {
-      toast.error("Vui lòng nhập đầy đủ thông tin thời gian giảng dạy!");
       return false;
     }
     return true;
   };
 
-  const handleAddDetail = (x) => {
-    console.log("data", x);
+  const handleAddDetail = async (x) => {
     if (quyTrinh.isXeNgoai) {
       let data = {
         ...quyTrinh,
+        NguoiDongPhi: x.Ten,
+        SoDienThoai: x.SoDienThoai,
         IdXeNgoai: x.Id,
         IdLoaiXe: x.IdLoaiXe,
         IdCanHo: "",
       };
       setQuyTrinh(data);
+      getData(data);
     } else {
       let data = {
         ...quyTrinh,
+        NguoiDongPhi: x.ChuSoHuu,
+        SoDienThoai: x.SoDienThoai,
         IdXeNgoai: "",
         IdLoaiXe: "",
         IdCanHo: x.Id,
       };
       setQuyTrinh(data);
+      getData(data);
     }
+  };
+
+  const getData = async (data) => {
+    let temp = {
+      id: quyTrinh.isXeNgoai ? data.IdXeNgoai : data.IdCanHo,
+      isXeNgoai: quyTrinh.isXeNgoai,
+    };
+    let res = await DanhMucService.XeNgoai.GetPhieuThu(temp);
+    if (res) {
+      let str = "";
+      str += res.Data.map((x, index) => {
+        return (
+          (index !== 0 ? " " : "") +
+          x.TenDichVu.toLowerCase() +
+          (x.BienKiemSoat === "-" ? "" : " " + x.BienKiemSoat)
+        );
+      });
+      let currentDate = new Date();
+      str +=
+        " tháng " + currentDate.getMonth() + "/" + currentDate.getFullYear();
+      setQuyTrinh({
+        ...quyTrinh,
+        ...data,
+        ListPhi: res.Data,
+        GhiChu: capitalizeFirstLowercaseRest(str),
+        LoaiDongPhi: LOAIDONGPHI[0],
+      });
+    }
+  };
+
+  let ctx = {
+    setForm: setForm,
+    quyTrinh: quyTrinh,
+    isChange: isChange,
   };
 
   if (isLoading) {
@@ -206,7 +232,7 @@ export default function CTQuanLyDongPhi() {
                   }}
                 />
               )}
-              {!quyTrinh.TrangThai && opt === "edit" && (
+              {!quyTrinh.TrangThai && opt === "update" && (
                 <Button
                   label="Xóa"
                   tooltip="Xóa"
@@ -253,45 +279,6 @@ export default function CTQuanLyDongPhi() {
         <hr />
         <div className="p-3">
           <div className="formgrid grid">
-            <div className="field col-12 md:col-6 lg:col-6">
-              <label>
-                Tên người đóng<span className="text-red-500">(*)</span>:
-              </label>
-              <InputText
-                className="w-full"
-                value={quyTrinh.GhiChu}
-                onChange={(e) => setForm(e.target.value, "GhiChu")}
-              />
-            </div>
-            <div className="field col-12 md:col-6 lg:col-6">
-              <label>
-                Loại đóng phí<span className="text-red-500">(*)</span>:
-              </label>
-              <Dropdown
-                resetFilterOnHide={true}
-                className="w-full p-inputtext-sm"
-                value={quyTrinh.LoaiDongPhi}
-                options={LOAIDONGPHI.map((x) => {
-                  return { value: x, label: x };
-                })}
-                onChange={(e) => {
-                  setForm(e.target.value, "LoaiDongPhi");
-                }}
-                filter
-                filterBy="value"
-                placeholder="Chọn loại đóng phí"
-              />
-            </div>
-            <div className="field col col-12 md:col-12">
-              <label>Nội dung:</label>
-              <InputTextarea
-                className="w-full"
-                rows={5}
-                cols={30}
-                value={quyTrinh.NoiDung}
-                onChange={(e) => setForm(e.target.value, "NoiDung")}
-              />
-            </div>
             <div className="field col col-12 md:col-2">
               <label>Cư dân/Xe Ngoài:</label>
               <ToggleButton
@@ -327,8 +314,61 @@ export default function CTQuanLyDongPhi() {
                 />
               </OverlayPanel>
             </div>
+            <div className="field col-12 md:col-4 lg:col-5"></div>
+            <div className="field col-12 md:col-4 lg:col-4">
+              <label>
+                Tên người đóng<span className="text-red-500">(*)</span>:
+              </label>
+              <InputText
+                className="w-full"
+                value={quyTrinh.NguoiDongPhi}
+                onChange={(e) => setForm(e.target.value, "NguoiDongPhi")}
+              />
+            </div>
+            <div className="field col-12 md:col-4 lg:col-4">
+              <label>
+                Số điện thoại<span className="text-red-500">(*)</span>:
+              </label>
+              <InputText
+                className="w-full"
+                value={quyTrinh.SoDienThoai}
+                onChange={(e) => setForm(e.target.value, "SoDienThoai")}
+              />
+            </div>
+            <div className="field col-12 md:col-4 lg:col-4">
+              <label>
+                Loại đóng phí<span className="text-red-500">(*)</span>:
+              </label>
+              <Dropdown
+                resetFilterOnHide={true}
+                className="w-full p-inputtext-sm"
+                value={quyTrinh.LoaiDongPhi}
+                options={LOAIDONGPHI.map((x) => {
+                  return { value: x, label: x };
+                })}
+                onChange={(e) => {
+                  setForm(e.target.value, "LoaiDongPhi");
+                }}
+                filter
+                filterBy="value"
+                placeholder="Chọn loại đóng phí"
+              />
+            </div>
             <div className="field col col-12 md:col-12">
-              <Table />
+              <label>Nội dung:</label>
+              <InputTextarea
+                className="w-full"
+                rows={3}
+                cols={30}
+                value={quyTrinh.GhiChu}
+                onChange={(e) => setForm(e.target.value, "GhiChu")}
+              />
+            </div>
+
+            <div className="field col col-12 md:col-12">
+              <PhiContext.Provider value={ctx}>
+                <Table />
+              </PhiContext.Provider>
             </div>
           </div>
         </div>

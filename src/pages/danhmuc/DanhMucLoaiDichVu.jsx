@@ -112,7 +112,7 @@ export default function DanhMucLoaiDichVu() {
     }
   };
   const validate = () => {
-    let validVar = ["Ma", "Ten", "DonGia"];
+    let validVar = ["Ma", "Ten"];
     return validForm(validVar, item);
   };
 

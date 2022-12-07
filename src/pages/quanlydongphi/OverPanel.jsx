@@ -50,7 +50,6 @@ export default function OverPanel({
   }, [filter.Keyword, reset, isXeNgoai]);
 
   const handleAdd = () => {
-    console.log("selected", selected);
     handleAddDetail(selected);
     setReset(!reset);
   };

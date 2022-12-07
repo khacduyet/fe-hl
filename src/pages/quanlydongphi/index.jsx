@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Column } from "primereact/column";
@@ -100,6 +101,7 @@ export default function QuanLyDongPhi() {
     filter.Thang,
     filter.LoaiNguoiDung,
     filter.IdLoaiXe,
+    filter.IdChungCu,
   ]);
 
   const handleAdd = () => {
@@ -127,7 +129,6 @@ export default function QuanLyDongPhi() {
       }
     }
   };
-
   const formatCurrency = (value) => {
     return value.toLocaleString("vi-VN", {
       style: "currency",
@@ -292,7 +293,7 @@ export default function QuanLyDongPhi() {
               bodyClassName="text-center"
               header="Tổng tiền"
               body={(rowData) => {
-                return <b>{formatCurrency(rowData.TongTien)}</b>;
+                return <b>{formatCurrency(rowData.TongTien ?? 0)}</b>;
               }}
             ></Column>
             <Column

@@ -47,6 +47,9 @@ function ServiceGeneratorKBGG(opt) {
         },
         UploadFile: (data) => {
             return post("FileUploader/Post", data);
+        },
+        GetPhieuThu: (data) => {
+            return get(dm + "GetThongTinPhieuThu?Id=" + data.id + "&isXeNgoai=" + data.isXeNgoai);
         }
     }
 }
