@@ -147,6 +147,26 @@ export default function QuanLyDongPhi() {
     }
   };
 
+  const handleExport = async () => {
+    let data = {
+      ...filter,
+      CurrentPage: paging.CurrentPage,
+    };
+    try {
+      let rs = await DanhMucService.QuanLyPhi.ExportPhieuThu(data);
+      if (rs) {
+        if (rs.StatusCode === 200) {
+          toast.success(rs.Message);
+          getList();
+        } else {
+          toast.error(rs.Message);
+        }
+      }
+    } catch (er) {
+      console.log(er);
+    }
+  };
+
   const formatCurrency = (value) => {
     return value.toLocaleString("vi-VN", {
       style: "currency",
@@ -198,6 +218,11 @@ export default function QuanLyDongPhi() {
               onClick={() => {
                 setShow(true);
               }}
+            />
+            <Button
+              label="Xuất dữ liệu"
+              className="p-button-sm ml-2"
+              onClick={handleExport}
             />
           </div>
           <div className="flex flex-row gap-3">

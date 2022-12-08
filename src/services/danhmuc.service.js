@@ -57,5 +57,8 @@ function ServiceGeneratorKBGG(opt) {
         SetDongPhiMultiple: (data) => {
             return post(dm + 'SetDongPhiMultiple', data);
         },
+        ExportPhieuThu: (data) => {
+            return post(dm + 'ExportPhieuThu', data);
+        },
     }
 }

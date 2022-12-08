@@ -275,14 +275,6 @@ export default function CTQuanLyDongPhi() {
                   }}
                 />
               )}
-              <Button
-                  label="Xóa"
-                  tooltip="Xóa"
-                  className="p-button-sm p-button-danger ml-2"
-                  onClick={() => {
-                    setVisible(true);
-                  }}
-                />
               {!quyTrinh.TrangThai && opt === "update" && (
                 <Button
                   label="Xác nhận đóng phí"
