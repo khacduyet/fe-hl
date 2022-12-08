@@ -46,4 +46,6 @@ export const vnCalendar = {
 
 export const LOAIDONGPHI = ["THANG", "QUY", "NAM"]
 
-export const LOAINGUOIDUNG = ["Cư dân","Xe ngoài"];
+export const LOAINGUOIDUNG = ["Cư dân", "Xe ngoài"];
+
+export const PAY = [{ value: "TIENMAT", label: "Tiền mặt" }, { value: "CHUYENKHOAN", label: "Chuyển khoản" }]

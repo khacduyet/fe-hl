@@ -42,7 +42,7 @@ export default function Table() {
     });
     setTongTien(total);
     context.setForm(total, "TongTien");
-  });
+  }, [context.quyTrinh.ListPhi]);
 
   return (
     <>

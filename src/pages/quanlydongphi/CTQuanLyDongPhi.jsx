@@ -12,7 +12,7 @@ import { ToggleButton } from "primereact/togglebutton";
 import { OverlayPanel } from "primereact/overlaypanel";
 import Loading from "../common/loading";
 import OverPanel from "./OverPanel";
-import { LOAIDONGPHI } from "../../services/const";
+import { LOAIDONGPHI, PAY } from "../../services/const";
 import Table from "./Table";
 import { createContext } from "react";
 import { outContext } from "../../App";
@@ -133,7 +133,7 @@ export default function CTQuanLyDongPhi() {
     }
   };
   const validate = () => {
-    let validVar = ["NguoiDongPhi", "SoDienThoai", "LoaiDongPhi"];
+    let validVar = ["NguoiDongPhi", "SoDienThoai", "LoaiDongPhi", "Pay"];
     if (!validForm(validVar, quyTrinh)) {
       toast.error("Vui lòng nhập đầy đủ các trường dữ liệu bắt buộc!");
       return false;
@@ -191,6 +191,7 @@ export default function CTQuanLyDongPhi() {
         ListPhi: res.Data,
         GhiChu: capitalizeFirstLowercaseRest(str),
         LoaiDongPhi: LOAIDONGPHI[0],
+        Pay: PAY[0].value,
       });
     }
   };
@@ -201,10 +202,20 @@ export default function CTQuanLyDongPhi() {
     isChange: isChange,
   };
 
+  useEffect(() => {
+    let temp = {
+      ...quyTrinh,
+      ListPhi: [],
+      NguoiDongPhi: "",
+      SoDienThoai: "",
+      GhiChu: "",
+    };
+    setQuyTrinh(temp);
+  }, [quyTrinh.isXeNgoai]);
+
   if (isLoading) {
     return <Loading />;
   }
-
   return (
     <>
       {visible && (
@@ -264,6 +275,14 @@ export default function CTQuanLyDongPhi() {
                   }}
                 />
               )}
+              <Button
+                  label="Xóa"
+                  tooltip="Xóa"
+                  className="p-button-sm p-button-danger ml-2"
+                  onClick={() => {
+                    setVisible(true);
+                  }}
+                />
               {!quyTrinh.TrangThai && opt === "update" && (
                 <Button
                   label="Xác nhận đóng phí"
@@ -367,7 +386,7 @@ export default function CTQuanLyDongPhi() {
                 onChange={(e) => setForm(e.target.value, "SoDienThoai")}
               />
             </div>
-            <div className="field col-12 md:col-4 lg:col-4">
+            <div className="field col-12 md:col-2 lg:col-2">
               <label>
                 Loại đóng phí<span className="text-red-500">(*)</span>:
               </label>
@@ -380,6 +399,23 @@ export default function CTQuanLyDongPhi() {
                 })}
                 onChange={(e) => {
                   setForm(e.target.value, "LoaiDongPhi");
+                }}
+                filter
+                filterBy="value"
+                placeholder="Chọn loại đóng phí"
+              />
+            </div>
+            <div className="field col-12 md:col-2 lg:col-2">
+              <label>
+                Loại đóng phí<span className="text-red-500">(*)</span>:
+              </label>
+              <Dropdown
+                resetFilterOnHide={true}
+                className="w-full p-inputtext-sm"
+                value={quyTrinh.Pay}
+                options={PAY}
+                onChange={(e) => {
+                  setForm(e.target.value, "Pay");
                 }}
                 filter
                 filterBy="value"

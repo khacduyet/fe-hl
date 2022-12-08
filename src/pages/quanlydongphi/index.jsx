@@ -28,6 +28,7 @@ export default function QuanLyDongPhi() {
   const [listQuyTrinh, setListQuyTrinh] = useState([]);
   const [listLoaiXe, setListLoaiXe] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [show, setShow] = useState(false);
   const [reset, setReset] = useState(false);
   const [selected, setSelected] = useState(null);
   const listThang = vnCalendar.monthNames.map((x, index) => {
@@ -130,6 +131,22 @@ export default function QuanLyDongPhi() {
       }
     }
   };
+
+  const handleAccept = async () => {
+    let arr = selected.map((x) => {
+      return x.Id;
+    });
+    let rs = await DanhMucService.QuanLyPhi.SetDongPhiMultiple(arr);
+    if (rs) {
+      if (rs.StatusCode === 200) {
+        toast.success(rs.Message);
+        getList();
+      } else {
+        toast.error(rs.Message);
+      }
+    }
+  };
+
   const formatCurrency = (value) => {
     return value.toLocaleString("vi-VN", {
       style: "currency",
@@ -145,6 +162,17 @@ export default function QuanLyDongPhi() {
           setVisible={setVisible}
           func={handleCreatePhieu}
           message="Bạn có chắc muốn tạo nhanh phiếu?"
+          header="Thông báo!"
+          acceptLabel="Đồng ý"
+          rejectLabel="Hủy bỏ"
+        />
+      )}
+      {show && (
+        <Confirm
+          visible={show}
+          setVisible={setShow}
+          func={handleAccept}
+          message="Bạn có chắc các phiếu này đã đóng?"
           header="Thông báo!"
           acceptLabel="Đồng ý"
           rejectLabel="Hủy bỏ"
@@ -167,7 +195,9 @@ export default function QuanLyDongPhi() {
             <Button
               label="Xác nhận đóng phí"
               className="p-button-sm p-button-success ml-2"
-              onClick={handleAdd}
+              onClick={() => {
+                setShow(true);
+              }}
             />
           </div>
           <div className="flex flex-row gap-3">
