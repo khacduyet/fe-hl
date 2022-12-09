@@ -44,6 +44,27 @@ export default function Table() {
     context.setForm(total, "TongTien");
   }, [context.quyTrinh.ListPhi]);
 
+  useEffect(() => {
+    let donvi = 1;
+    switch (context.quyTrinh.LoaiDongPhi) {
+      case "QUY":
+        donvi = 3;
+        break;
+      case "NAM":
+        donvi = 12;
+        break;
+      default:
+        donvi = 1;
+        break;
+    }
+    let temp = context.quyTrinh.ListPhi.map((x) => {
+      x.DonVi = donvi;
+      x.ThanhTien = x.SoLuong * x.Gia * x.DonVi;
+      return x;
+    });
+    context.setForm(temp, "ListPhi");
+  }, [context.quyTrinh.LoaiDongPhi]);
+
   return (
     <>
       <DataTable
@@ -105,6 +126,13 @@ export default function Table() {
           body={(rowData) => {
             return formatCurrency(rowData.Gia);
           }}
+        ></Column>
+        <Column
+          style={{ width: "10%" }}
+          field="DonVi"
+          headerClassName="text-center"
+          bodyClassName="text-center"
+          header="Đơn vị"
         ></Column>
         <Column
           style={{ width: "10%" }}

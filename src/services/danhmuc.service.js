@@ -49,7 +49,7 @@ function ServiceGeneratorKBGG(opt) {
             return post("FileUploader/Post", data);
         },
         GetPhieuThu: (data) => {
-            return get(dm + "GetThongTinPhieuThu?Id=" + data.id + "&isXeNgoai=" + data.isXeNgoai);
+            return get(dm + "GetThongTinPhieuThu?Id=" + data.id + "&isXeNgoai=" + data.isXeNgoai + "&LoaiDongPhi=" + data.LoaiDongPhi);
         },
         SetDongPhi: (id) => {
             return get(dm + 'SetDongPhi?Id=' + id);

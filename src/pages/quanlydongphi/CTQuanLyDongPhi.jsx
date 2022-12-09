@@ -171,6 +171,7 @@ export default function CTQuanLyDongPhi() {
     let temp = {
       id: quyTrinh.isXeNgoai ? data.IdXeNgoai : data.IdCanHo,
       isXeNgoai: quyTrinh.isXeNgoai,
+      LoaiDongPhi: quyTrinh.LoaiDongPhi,
     };
     let res = await DanhMucService.XeNgoai.GetPhieuThu(temp);
     if (res) {
