@@ -45,7 +45,7 @@ export default function QuanLyDongPhi() {
   const context = useContext(outContext);
   const [filter, setFilter] = useState({
     LoaiNguoiDung: 1,
-    Thang: 0,
+    Thang: new Date().getMonth() + 1,
     Keyword: "",
     IdChungCu: context.access_chungcu,
     DaDongPhi: 0,
