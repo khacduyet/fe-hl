@@ -22,7 +22,7 @@ export default function Table() {
         <Column
           className="font-bold"
           footer="TỔNG TIỀN:"
-          colSpan={7}
+          colSpan={8}
           footerStyle={{ textAlign: "right" }}
         />
         <Column

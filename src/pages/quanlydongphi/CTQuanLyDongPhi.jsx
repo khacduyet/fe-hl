@@ -167,6 +167,15 @@ export default function CTQuanLyDongPhi() {
     }
   };
 
+  const handlePrint = async () => {
+    let res = await DanhMucService.QuanLyPhi.ExportPrintPhieuThu(quyTrinh.Id);
+    if (res && res.StatusCode === 200) {
+      toast.success(res.Message);
+    } else {
+      toast.error(res.Message);
+    }
+  };
+
   const getData = async (data) => {
     let temp = {
       id: quyTrinh.isXeNgoai ? data.IdXeNgoai : data.IdCanHo,
@@ -284,6 +293,14 @@ export default function CTQuanLyDongPhi() {
                   onClick={() => {
                     setAccept(true);
                   }}
+                />
+              )}
+              {opt === "update" && (
+                <Button
+                  label="In phiếu thu"
+                  tooltip="In phiếu thu"
+                  className="p-button-sm p-button-success ml-2"
+                  onClick={handlePrint}
                 />
               )}
             </div>
