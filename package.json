@@ -27,7 +27,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "br": "react-scripts build && robocopy build \\\\10.0.5.66\\SmartEOS_Office\\module /E",
+    "br": "react-scripts build",
     "bd": "react-scripts build && copy build \\\\10.0.5.66\\SmartEOS_Office\\module /E",
     "bx": "react-scripts build && xcopy 'E:\\Autobackup_Lock\\GitProject\\qt-giz\\build\\*.*' '\\10.0.5.66\\SmartEOS_Office\\module\\' /K /D /H /Y"
   },

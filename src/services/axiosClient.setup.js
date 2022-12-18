@@ -11,7 +11,8 @@ const axiosClient = axios.create({
   },
   // baseURL: window.location.origin.includes('localhost') ? `http://eos.harmonyes.com.vn:1888/` : ``,
   // baseURL: `http://localhost:9999/`,
-  baseURL: `http://localhost:1062/`,
+  baseURL: `http://192.168.188.1:81/`,
+  // baseURL: `http://localhost:1062/`,
   withCredentials: true,
 });
 axiosClient.interceptors.response.use(
