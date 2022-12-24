@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 import { outContext } from "../../App";
 import { Confirm } from "../common/common";
 import { ConfirmDialog } from "primereact/confirmdialog";
+import { baseUrl } from "../../services/axiosClient.setup";
 
 export default function QuanLyDongPhi() {
   const navigate = useNavigate();
@@ -157,6 +158,7 @@ export default function QuanLyDongPhi() {
       if (rs) {
         if (rs.StatusCode === 200) {
           toast.success(rs.Message);
+          window.open(baseUrl + rs.Data, '_blank').focus();
           getList();
         } else {
           toast.error(rs.Message);
@@ -176,6 +178,7 @@ export default function QuanLyDongPhi() {
       if (rs) {
         if (rs.StatusCode === 200) {
           toast.success(rs.Message);
+          window.open(baseUrl + rs.Data, '_blank').focus();
           getList();
         } else {
           toast.error(rs.Message);

@@ -51,7 +51,8 @@ function App() {
   return (
     <>
       <div>
-        {isLocal() && <Layout />}
+        {/* {isLocal() && <Layout />} */}
+        <Layout />
         <nav className="nav-bar d-flex justify-content-between align-items-center bg-white border-bottom shadow-sm">
           <div className="d-flex justify-content-between align-items-center">
             <button>ABC</button>

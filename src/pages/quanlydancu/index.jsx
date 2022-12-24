@@ -14,6 +14,7 @@ import { Dropdown } from "primereact/dropdown";
 import { cLoaiPhuongTien, cLoaiXe } from "../common/apiservice";
 import { outContext } from "../../App";
 import { FileUpload } from "primereact/fileupload";
+import { baseUrl } from "../../services/axiosClient.setup";
 
 export default function QuanLyDanCu() {
   const { toast } = useOutletContext();
@@ -228,8 +229,7 @@ export default function QuanLyDanCu() {
     if (res) {
       if (res.StatusCode === 200) {
         toast.success(res.Message);
-        let url = window.location.origin;
-        window.location.replace(url + res.Data);
+        window.open(baseUrl + res.Data, '_blank').focus();
       } else {
         toast.error(res.Message);
       }

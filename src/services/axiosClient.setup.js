@@ -2,6 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 // const BEARER = "BEARER "
+export const baseUrl = "http://27.76.236.63:9999"
 
 const axiosClient = axios.create({
   headers: {
@@ -11,7 +12,7 @@ const axiosClient = axios.create({
   },
   // baseURL: window.location.origin.includes('localhost') ? `http://eos.harmonyes.com.vn:1888/` : ``,
   // baseURL: `http://localhost:9999/`,
-  baseURL: `http://192.168.188.1:81/`,
+  baseURL: baseUrl,
   // baseURL: `http://localhost:1062/`,
   withCredentials: true,
 });

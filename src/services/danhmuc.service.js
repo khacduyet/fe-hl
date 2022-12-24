@@ -65,6 +65,6 @@ function ServiceGeneratorKBGG(opt) {
         },
         ExportPrintAllPhieuThu: (data) => {
             return post(dm + 'ExportPrintAllPhieuThu', data);
-        },
+        }
     }
 }

@@ -14,6 +14,7 @@ import { outContext } from "../../App";
 import { DanhMucService } from "../../services/danhmuc.service";
 import { validForm } from "../../services/helperfunction";
 import { cLoaiPhuongTien, cLoaiXe } from "../common/apiservice";
+import { baseUrl } from "../../services/axiosClient.setup";
 
 export default function XeNgoai() {
   const { toast } = useOutletContext();
@@ -147,8 +148,7 @@ export default function XeNgoai() {
     if (res) {
       if (res.StatusCode === 200) {
         toast.success(res.Message);
-        let url = window.location.origin;
-        window.location.replace(url + res.Data);
+        window.open(baseUrl + res.Data, '_blank').focus();
       } else {
         toast.error(res.Message);
       }
