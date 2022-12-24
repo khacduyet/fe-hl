@@ -206,6 +206,7 @@ export default function QuanLyDanCu() {
   const handleImport = async (e) => {
     const formData = new FormData();
     formData.append("file", e.files[0]);
+    console.log("formData", formData);
     let up = await DanhMucService.CanHo.UploadFile(formData);
     if (up) {
       let res = await DanhMucService.CanHo.Import(
@@ -255,10 +256,13 @@ export default function QuanLyDanCu() {
               mode="basic"
               name="file"
               accept=".xls,.xlsx"
+              url={baseUrl + `/FileUploader/Post`}
               auto
               chooseOptions={chooseOptions}
               className="p-button-sm ml-2 inline-block"
-              onUpload={handleImport}
+              onUpload={(e)=>{
+                handleImport(e)
+              }}
             />
             <Button
               label="Xuất dữ liệu"
