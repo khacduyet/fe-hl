@@ -11,14 +11,17 @@ import { ToastContainer, toast } from "react-toastify";
 import { vnCalendar } from "./services/const";
 import { createContext, useContext, useEffect, useState } from "react";
 import { Menubar } from 'primereact/menubar';
+import { Dialog } from 'primereact/dialog';
 import { Dropdown } from "primereact/dropdown";
 import { cChungCu } from "./pages/common/apiservice";
 import { useCookies } from 'react-cookie'
+import { Button } from "primereact/button";
 
 export const outContext = createContext();
 function App() {
   const [cookies, setCookie] = useCookies(['access_chungcu'])
   const [chungCu, setChungCu] = useState([]);
+  const [showNavBar, setShowNavBar] = useState(false)
 
   addLocale("vn", vnCalendar);
   const isLocal = () => {
@@ -44,6 +47,9 @@ function App() {
       setCookie('access_chungcu', e, { path: '/', expires })
     }
   }
+  const onHide = () => {
+    setShowNavBar(false)
+  }
 
   useEffect(() => {
     getOptions();
@@ -51,11 +57,19 @@ function App() {
   return (
     <>
       <div>
-        {/* {isLocal() && <Layout />} */}
-        <Layout />
-        <nav className="nav-bar d-flex justify-content-between align-items-center bg-white border-bottom shadow-sm">
+        <Dialog dismissableMask header="Menu" visible={showNavBar} position={"left"} modal style={{ width: '30vw', height: "100%" }} draggable={false} onHide={() => onHide()}
+          resizable={false}>
+          <Layout />
+        </Dialog>
+        <nav className="nav-bar d-flex justify-content-between align-items-center ">
           <div className="d-flex justify-content-between align-items-center">
-            <button>ABC</button>
+            <Button
+              icon="pi pi-bars"
+              className="p-button-sm"
+              onClick={() => {
+                setShowNavBar(true)
+              }}
+            />
           </div>
           <div className="d-flex justify-content-center align-items-center">
             <div className="d-flex justify-content-between align-items-center">
@@ -97,17 +111,19 @@ function Layout() {
   return (
     <>
       <div>
-        <h1>Menu in localhost!</h1>
-        <nav style={_stl}>
-          <Link style={_stl_item} to="/danhmuc/chungcu">Chung cư</Link>
-          <Link style={_stl_item} to="/danhmuc/phuongtien">Phương tiện</Link>
-          {/* <Link style={_stl_item} to="/danhmuc/loaidongphi">Loại đóng phí</Link> */}
-          <Link style={_stl_item} to="/danhmuc/loaidichvu">Loại dịch vụ</Link>
-          <Link style={_stl_item} to="/danhmuc/loaixe">Loại xe</Link>
-          <Link style={_stl_item} to="/danhmuc/canho">Căn hộ</Link>
-          <Link style={_stl_item} to="/danhmuc/xengoai">Xe ngoài</Link>
-          <Link style={_stl_item} to="/quanlydongphi">Quản lý đóng phí</Link>
-          {/* <Link style={_stl_item} to="/quytrinh/khaibaogiogiang">Khai báo giờ giảng</Link> */}
+        <nav  className="nav-bar-menu">
+          <span className="nav-bar-span">Danh mục</span>
+          <Link className="nav-bar-menu-item" to="/danhmuc/chungcu">Chung cư</Link>
+          <Link className="nav-bar-menu-item" to="/danhmuc/phuongtien">Phương tiện</Link>
+          {/* <Link className="nav-bar-menu-item" to="/danhmuc/loaidongphi">Loại đóng phí</Link> */}
+          <Link className="nav-bar-menu-item" to="/danhmuc/loaidichvu">Loại dịch vụ</Link>
+          <Link className="nav-bar-menu-item" to="/danhmuc/loaixe">Loại xe</Link>
+          <span className="nav-bar-span">Quản lý căn hộ/xe ngoài</span>
+          <Link className="nav-bar-menu-item" to="/danhmuc/canho">Căn hộ</Link>
+          <Link className="nav-bar-menu-item" to="/danhmuc/xengoai">Xe ngoài</Link>
+          <span className="nav-bar-span">Quản lý đóng phí</span>
+          <Link className="nav-bar-menu-item" to="/quanlydongphi">Quản lý đóng phí</Link>
+          {/* <Link className="nav-bar-menu-item" to="/quytrinh/khaibaogiogiang">Khai báo giờ giảng</Link> */}
         </nav>
       </div>
     </>
@@ -116,13 +132,3 @@ function Layout() {
 
 export const toastr = toast;
 export default App;
-
-const _stl = {
-  display: "flex",
-}
-const _stl_item = {
-  border: "1px solid #000",
-  backgroundColor: "#ccc",
-  textAlign: "center",
-  width: "12em"
-}

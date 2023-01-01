@@ -2,7 +2,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 // const BEARER = "BEARER "
-export const baseUrl = "http://27.76.236.63:9999"
+// export const baseUrl = "http://27.76.236.63:9999"
+export const baseUrl = window.location.origin.includes('localhost') ? `http://192.168.188.1:81/` : window.location.origin + "/be/"
 
 const axiosClient = axios.create({
   headers: {

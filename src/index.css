@@ -228,3 +228,28 @@ code {
   font-size: 12px;
   letter-spacing: 0.3px;
 }
+
+.nav-bar-menu{
+  /* display: "flex", */
+}
+.nav-bar-menu .nav-bar-span{
+  font-weight: bold;
+}
+.nav-bar-menu .nav-bar-menu-item {
+  width: 100%;
+  border-left: 2px solid #000;
+  background-color: rgb(245 245 245);
+  font-size: 16px;
+  padding: 10px;
+  margin-bottom: 3px;
+  display: block;
+  transition: 0.25s;
+}
+.nav-bar-menu .nav-bar-menu-item:hover{
+  background-color: rgb(63, 157, 163);
+  color: #fff;
+}
+.nav-bar-menu .nav-bar-menu-item:active{
+  background-color: rgb(63, 157, 163);
+  color: #fff;
+}
